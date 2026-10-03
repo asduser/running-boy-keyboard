@@ -1,3 +1,6 @@
+// Sprites, images and sounds are shared with the original app in main/.
+var ASSET_PATH = "../";
+
 function exampleText() {
   hideBGfont();
   getNewExampletext();
@@ -98,7 +101,7 @@ function primer() {
 }
 function changeSpriteBoy() {
   spriteUrlThis = spriteUrlCounter % 4;
-  spriteBoyUrl = "rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
+  spriteBoyUrl = ASSET_PATH + "rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
   document.spriteboy_img.src = spriteBoyUrl;
 }
 function scrollSpriteBoy() {
@@ -110,7 +113,7 @@ function scrollSpriteBoy() {
 }
 function changeSpriteEnemy() {
   spriteEnemyUrlThis = spriteEnemyUrlCounter % 4;
-  spriteEnemyUrl = "rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
+  spriteEnemyUrl = ASSET_PATH + "rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
   document.spriteEnemy_img.src = spriteEnemyUrl;
   scrollingEnemy = document.getElementById("spriteEnemy");
   curPosEnemy = scrollingEnemy.style.left;
@@ -274,12 +277,14 @@ function hideLevel1popup() {
   document.getElementById("parent_level1Popup").style.display = "none";
 }
 function showBGfont() {
-  document.getElementById("wrapper").style.backgroundImage =
-    "url('bg_font_mini.jpg')";
+  setBackground("bg_font_mini.jpg");
 }
 function hideBGfont() {
-  document.getElementById("wrapper").style.backgroundImage =
-    "url('bg_font_mini2.jpg')";
+  setBackground("bg_font_mini2.jpg");
+}
+// The background covers the whole page (see fitStage), not just the stage.
+function setBackground(file) {
+  document.body.style.backgroundImage = "url('" + ASSET_PATH + file + "')";
 }
 function MenuButtonOn() {
   volumeValueOn = document.getElementById("VolumeBtOn");
@@ -324,8 +329,8 @@ function soundHoverMenu() {
     ogg: "audio/ogg",
     wav: "audio/wav",
   };
-  mouseoversound = b("../sounds/button19.wav");
-  clicksound = b("../sounds/click.ogg");
+  mouseoversound = b(ASSET_PATH + "../sounds/button19.wav");
+  clicksound = b(ASSET_PATH + "../sounds/click.ogg");
 }
 function soundHoverMenu1() {
   function b(b) {
@@ -353,8 +358,8 @@ function soundHoverMenu1() {
       },
     };
   }
-  mouseoversound = b("../sounds/soundsOff.wav");
-  clicksound = b("../sounds/soundsOff.wav");
+  mouseoversound = b(ASSET_PATH + "../sounds/soundsOff.wav");
+  clicksound = b(ASSET_PATH + "../sounds/soundsOff.wav");
 }
 function playBgMusic() {
   buttona = document.getElementById("mybtnBg");
@@ -362,13 +367,13 @@ function playBgMusic() {
   if (1 == myaudio.paused) {
     myaudio.volume = "0.65";
     myaudio.play();
-    buttona.style.backgroundImage = "url('images/bgMusicOn.png')";
+    buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOn.png')";
     buttona.style.color = "White";
     bgMusicValue = 2;
   } else {
     if (0 == myaudio.paused) {
       myaudio.pause();
-      buttona.style.backgroundImage = "url('images/bgMusicOff.png')";
+      buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOff.png')";
       buttona.style.color = "Black";
       bgMusicValue = 0;
     }
@@ -527,3 +532,118 @@ function minMaxTimeVal() {
     }
   }
 }
+
+// ---- Responsive scaling ----
+// The stage keeps its original fixed pixel layout (sprite positions above are in px),
+// so instead of reflowing it we scale it with a CSS transform. The background image
+// is drawn on the whole page, anchored to the bottom, and the stage is placed so the
+// characters keep running on the ground line of that image.
+var STAGE_WIDTH = 1250;
+var STAGE_HEIGHT = 750;
+var STAGE_GROUND_Y = 688; // where the characters' feet are on the stage
+var STAGE_TOP_SPACE = 30; // empty space above the menu buttons and score
+var BG_WIDTH = 1500;
+var BG_HEIGHT = 750;
+var BG_GROUND_HEIGHT = BG_HEIGHT - 688; // ground strip at the bottom of the image
+var POPUP_IDS = [
+  "parent_popup",
+  "parent_miscGame",
+  "parent_option",
+  "parent_help",
+  "parent_level1Popup",
+  "parent_gameOverPopup",
+  "parent_winnerPopup",
+  "parent_statsPopup",
+];
+var lastViewportWidth = 0;
+var stageScale = 1;
+
+function fitStage() {
+  // visualViewport excludes the on-screen keyboard on phones.
+  var vv = window.visualViewport;
+  var w = window.innerWidth;
+  var h = vv ? vv.height : window.innerHeight;
+  var viewTop = vv ? vv.offsetTop : 0;
+  // While typing, the keyboard changes the height only: keep the scale so the
+  // stage doesn't jump, just move it above the keyboard.
+  var typing = document.activeElement === document.getElementById("primerText");
+  if (!typing || w !== lastViewportWidth) {
+    lastViewportWidth = w;
+    // In portrait the width is the real limit; there is plenty of room above.
+    stageScale =
+      h > w
+        ? Math.min(1, w / STAGE_WIDTH)
+        : Math.min(1, w / STAGE_WIDTH, h / STAGE_HEIGHT);
+  }
+  // The background is at least as big as the stage and always covers the width.
+  var bgScale = Math.max(stageScale, w / BG_WIDTH);
+  var bgTop = viewTop + h - BG_HEIGHT * bgScale;
+  var body = document.body;
+  body.style.backgroundSize =
+    BG_WIDTH * bgScale + "px " + BG_HEIGHT * bgScale + "px";
+  body.style.backgroundPosition = "center " + bgTop + "px";
+
+  var groundTop = viewTop + h - BG_GROUND_HEIGHT * bgScale;
+  // The stage has some empty space at its top, so on short screens it may go
+  // slightly above the viewport to keep the characters on the ground.
+  var stageTop = Math.max(
+    viewTop - STAGE_TOP_SPACE * stageScale,
+    groundTop - STAGE_GROUND_Y * stageScale,
+  );
+  var wrapper = document.getElementById("wrapper");
+  wrapper.style.left = (w - STAGE_WIDTH * stageScale) / 2 + "px";
+  wrapper.style.top = stageTop + "px";
+  wrapper.style.transform = "scale(" + stageScale + ")";
+}
+
+function fitPopup(overlay) {
+  if (overlay.style.display !== "block") {
+    return;
+  }
+  var box = overlay.firstElementChild;
+  overlay.style.zoom = 1;
+  var gap = 16;
+  var scale = Math.min(
+    1,
+    (window.innerWidth - 2 * gap) / box.offsetWidth,
+    (window.innerHeight - 2 * gap) / box.offsetHeight,
+  );
+  // Very short screens (landscape phones): don't shrink below half size, scroll instead.
+  scale = Math.max(scale, Math.min(1, (window.innerWidth - 2 * gap) / box.offsetWidth) / 2);
+  overlay.style.zoom = scale;
+}
+
+function fitAll() {
+  fitStage();
+  for (var n = 0; n < POPUP_IDS.length; n++) {
+    fitPopup(document.getElementById(POPUP_IDS[n]));
+  }
+}
+
+function initResponsive() {
+  // Popups are shown by setting style.display in many places (also inline in
+  // index.html), so watch for that instead of touching every call site.
+  var observer = new MutationObserver(function (mutations) {
+    for (var n = 0; n < mutations.length; n++) {
+      var el = mutations[n].target;
+      if (el.style.display !== el.lastDisplay) {
+        el.lastDisplay = el.style.display;
+        fitPopup(el);
+      }
+    }
+  });
+  for (var n = 0; n < POPUP_IDS.length; n++) {
+    var overlay = document.getElementById(POPUP_IDS[n]);
+    overlay.lastDisplay = overlay.style.display;
+    observer.observe(overlay, { attributes: true, attributeFilter: ["style"] });
+  }
+  window.addEventListener("resize", fitAll);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", fitStage);
+    window.visualViewport.addEventListener("scroll", fitStage);
+  }
+  window.addEventListener("orientationchange", fitAll);
+  fitAll();
+}
+
+document.addEventListener("DOMContentLoaded", initResponsive);
