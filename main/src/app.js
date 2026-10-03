@@ -1,4 +1,3 @@
-// Sprites, images and sounds are shared with the original app in main/.
 var ASSET_PATH = "../";
 
 function exampleText() {
@@ -282,7 +281,6 @@ function showBGfont() {
 function hideBGfont() {
   setBackground("bg_font_mini2.jpg");
 }
-// The background covers the whole page (see fitStage), not just the stage.
 function setBackground(file) {
   document.body.style.backgroundImage = "url('" + ASSET_PATH + file + "')";
 }
@@ -366,7 +364,10 @@ function playBgMusic() {
   myaudio = document.getElementById("myaudio");
   if (1 == myaudio.paused) {
     myaudio.volume = "0.65";
-    myaudio.play();
+    var playing = myaudio.play();
+    if (playing) {
+      playing.catch(showSoundUnlock);
+    }
     buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOn.png')";
     buttona.style.color = "White";
     bgMusicValue = 2;
@@ -533,19 +534,15 @@ function minMaxTimeVal() {
   }
 }
 
-// ---- Responsive scaling ----
-// The stage keeps its original fixed pixel layout (sprite positions above are in px),
-// so instead of reflowing it we scale it with a CSS transform. The background image
-// is drawn on the whole page, anchored to the bottom, and the stage is placed so the
-// characters keep running on the ground line of that image.
 var STAGE_WIDTH = 1250;
 var STAGE_HEIGHT = 750;
-var STAGE_GROUND_Y = 688; // where the characters' feet are on the stage
-var STAGE_TOP_SPACE = 30; // empty space above the menu buttons and score
+var STAGE_GROUND_Y = 688;
+var STAGE_TOP_SPACE = 30;
 var BG_WIDTH = 1500;
 var BG_HEIGHT = 750;
-var BG_GROUND_HEIGHT = BG_HEIGHT - 688; // ground strip at the bottom of the image
+var BG_GROUND_HEIGHT = BG_HEIGHT - 688;
 var POPUP_IDS = [
+  "parent_soundUnlock",
   "parent_popup",
   "parent_miscGame",
   "parent_option",
@@ -559,23 +556,18 @@ var lastViewportWidth = 0;
 var stageScale = 1;
 
 function fitStage() {
-  // visualViewport excludes the on-screen keyboard on phones.
   var vv = window.visualViewport;
   var w = window.innerWidth;
   var h = vv ? vv.height : window.innerHeight;
   var viewTop = vv ? vv.offsetTop : 0;
-  // While typing, the keyboard changes the height only: keep the scale so the
-  // stage doesn't jump, just move it above the keyboard.
   var typing = document.activeElement === document.getElementById("primerText");
   if (!typing || w !== lastViewportWidth) {
     lastViewportWidth = w;
-    // In portrait the width is the real limit; there is plenty of room above.
     stageScale =
       h > w
         ? Math.min(1, w / STAGE_WIDTH)
         : Math.min(1, w / STAGE_WIDTH, h / STAGE_HEIGHT);
   }
-  // The background is at least as big as the stage and always covers the width.
   var bgScale = Math.max(stageScale, w / BG_WIDTH);
   var bgTop = viewTop + h - BG_HEIGHT * bgScale;
   var body = document.body;
@@ -584,8 +576,6 @@ function fitStage() {
   body.style.backgroundPosition = "center " + bgTop + "px";
 
   var groundTop = viewTop + h - BG_GROUND_HEIGHT * bgScale;
-  // The stage has some empty space at its top, so on short screens it may go
-  // slightly above the viewport to keep the characters on the ground.
   var stageTop = Math.max(
     viewTop - STAGE_TOP_SPACE * stageScale,
     groundTop - STAGE_GROUND_Y * stageScale,
@@ -608,7 +598,6 @@ function fitPopup(overlay) {
     (window.innerWidth - 2 * gap) / box.offsetWidth,
     (window.innerHeight - 2 * gap) / box.offsetHeight,
   );
-  // Very short screens (landscape phones): don't shrink below half size, scroll instead.
   scale = Math.max(scale, Math.min(1, (window.innerWidth - 2 * gap) / box.offsetWidth) / 2);
   overlay.style.zoom = scale;
 }
@@ -621,8 +610,6 @@ function fitAll() {
 }
 
 function initResponsive() {
-  // Popups are shown by setting style.display in many places (also inline in
-  // index.html), so watch for that instead of touching every call site.
   var observer = new MutationObserver(function (mutations) {
     for (var n = 0; n < mutations.length; n++) {
       var el = mutations[n].target;
@@ -647,3 +634,54 @@ function initResponsive() {
 }
 
 document.addEventListener("DOMContentLoaded", initResponsive);
+
+function allSounds() {
+  var sounds = Array.prototype.slice.call(document.getElementsByTagName("audio"));
+  if (window.mouseoversound) sounds.push(mouseoversound);
+  if (window.clicksound) sounds.push(clicksound);
+  return sounds;
+}
+
+function muteAllSounds(muted) {
+  var sounds = allSounds();
+  for (var n = 0; n < sounds.length; n++) {
+    sounds[n].muted = muted;
+  }
+}
+
+function showSoundUnlock() {
+  document.getElementById("parent_soundUnlock").style.display = "block";
+}
+
+function unlockSound() {
+  document.getElementById("parent_soundUnlock").style.display = "none";
+  var sounds = allSounds();
+  for (var n = 0; n < sounds.length; n++) {
+    if (sounds[n] !== myaudio && sounds[n].paused) {
+      primeSound(sounds[n]);
+    }
+  }
+  if (2 == bgMusicValue) {
+    myaudio.play();
+  }
+}
+
+function primeSound(sound) {
+  sound.muted = true;
+  var playing = sound.play();
+  if (playing) {
+    playing
+      .then(function () {
+        sound.pause();
+        sound.currentTime = 0;
+      })
+      .catch(function () {})
+      .then(function () {
+        sound.muted = document.hidden;
+      });
+  }
+}
+
+document.addEventListener("visibilitychange", function () {
+  muteAllSounds(document.hidden);
+});
