@@ -21,3 +21,4 @@ body{overflow:hidden;background:#148edb no-repeat center bottom}
 #soundUnlock .hr2{margin:18px auto}
 #soundUnlock_btn{margin:12px 0 0;background:#2F6184;color:#fff;padding:8px 18px;font:700 17px Georgia;border:none;cursor:pointer}
 #soundUnlock_btn:hover{background:#080}
+#boyMenu li:hover{cursor:url(../../assets/icons/cursorBoyGreen.png) 0 0,pointer}
