@@ -10,6 +10,8 @@ export class Emitter<Events extends object> {
   }
 
   protected emit<K extends keyof Events>(type: K, payload: Events[K]): void {
-    this.listeners[type]?.forEach((listener) => listener(payload));
+    this.listeners[type]?.forEach((listener) => {
+      listener(payload);
+    });
   }
 }

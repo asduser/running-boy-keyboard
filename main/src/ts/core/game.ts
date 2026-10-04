@@ -16,7 +16,7 @@ export interface GameEvents {
   typed: { readonly result: Exclude<TypingResult, "ignored">; readonly round: RoundSnapshot };
   heroMoved: Actor;
   enemyMoved: Actor;
-  enemyBarked: void;
+  enemyBarked: undefined;
   roundEnded: RoundResult;
 }
 
@@ -59,11 +59,16 @@ export class Game extends Emitter<GameEvents> {
     this.abort();
     const { texts, enemy } = config.level;
     const text = texts[Math.floor(this.random() * texts.length)];
+    if (text === undefined) {
+      throw new Error(`Level ${String(config.level.number)} has no texts`);
+    }
     this.round = {
       config,
       typing: new TypingRound(text),
       startedAt: this.now(),
-      stopChase: this.scheduler.every(config.difficulty.enemyStepDelayMs, () => this.chaseStep()),
+      stopChase: this.scheduler.every(config.difficulty.enemyStepDelayMs, () => {
+        this.chaseStep();
+      }),
       score: 0,
       heroSteps: 1,
       hero: { position: HERO_START_POSITION, frame: 1 },

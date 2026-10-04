@@ -6,7 +6,7 @@ import { byId } from "./dom";
 export class MenuView {
   renderSettings(settings: SettingsState): void {
     const difficulty = DIFFICULTIES[settings.difficulty];
-    byId<HTMLSelectElement>("gameDiff").value = difficulty.id;
+    byId("gameDiff", HTMLSelectElement).value = difficulty.id;
     byId("optionValueSpeed").textContent = difficulty.typingSpeed;
     byId("optionValueError").textContent = difficulty.errorImpact;
     byId("optionValueTime").textContent = difficulty.totalTime;
@@ -21,8 +21,12 @@ export class MenuView {
     const musicButton = byId("mybtnBg");
     musicButton.classList.toggle("on", settings.menuMusic);
     musicButton.classList.toggle("off", !settings.menuMusic);
-    byId<HTMLInputElement>("volume_range").value = String(Math.round(settings.menuMusicVolume * 100));
-    byId<HTMLInputElement>("gameAudio_range").value = String(Math.round(settings.gameMusicVolume * 100));
+    byId("volume_range", HTMLInputElement).value = String(
+      Math.round(settings.menuMusicVolume * 100),
+    );
+    byId("gameAudio_range", HTMLInputElement).value = String(
+      Math.round(settings.gameMusicVolume * 100),
+    );
 
     this.renderToggle("musicInGameOn", "musicInGameOff", settings.gameMusic);
     this.renderToggle("VolumeBtOn", "VolumeBtOff", settings.menuSounds);

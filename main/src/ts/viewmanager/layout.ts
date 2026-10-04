@@ -15,14 +15,20 @@ export class Layout {
   private stageScale = 1;
 
   init(): void {
-    const onResize = () => {
+    const onResize = (): void => {
       this.fitStage();
-      this.resizeListeners.forEach((listener) => listener());
+      this.resizeListeners.forEach((listener) => {
+        listener();
+      });
     };
     window.addEventListener("resize", onResize);
     window.addEventListener("orientationchange", onResize);
-    window.visualViewport?.addEventListener("resize", () => this.fitStage());
-    window.visualViewport?.addEventListener("scroll", () => this.fitStage());
+    window.visualViewport?.addEventListener("resize", () => {
+      this.fitStage();
+    });
+    window.visualViewport?.addEventListener("scroll", () => {
+      this.fitStage();
+    });
     onResize();
   }
 
@@ -61,7 +67,10 @@ export class Layout {
     body.style.backgroundPosition = `center ${viewTop + height - BG_HEIGHT * bgScale}px`;
 
     const groundTop = viewTop + height - BG_GROUND_HEIGHT * bgScale;
-    const stageTop = Math.max(viewTop - STAGE_TOP_SPACE * scale, groundTop - STAGE_GROUND_Y * scale);
+    const stageTop = Math.max(
+      viewTop - STAGE_TOP_SPACE * scale,
+      groundTop - STAGE_GROUND_Y * scale,
+    );
     const stage = byId("wrapper");
     stage.style.left = `${(width - STAGE_WIDTH * scale) / 2}px`;
     stage.style.top = `${stageTop}px`;

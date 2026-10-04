@@ -29,25 +29,63 @@ export interface UiActions {
 
 export function bindHandlers(actions: UiActions): void {
   const clickActions: Record<string, () => void> = {
-    start: () => actions.start(),
-    "start-level": () => actions.startLevel(),
-    "open-volume": () => actions.openVolume(),
-    "open-settings": () => actions.openSettings(),
-    "open-help": () => actions.openHelp(),
-    "back-to-menu": () => actions.backToMenu(),
-    "leave-to-menu": () => actions.leaveToMenu(),
-    "leave-to-help": () => actions.leaveToHelp(),
-    "play-again": () => actions.playAgain(),
-    "result-to-menu": () => actions.resultToMenu(),
-    "show-stats": () => actions.showStats(),
-    "unlock-sound": () => actions.unlockSound(),
-    "toggle-menu-music": () => actions.toggleMenuMusic(),
-    "game-music-on": () => actions.setGameMusic(true),
-    "game-music-off": () => actions.setGameMusic(false),
-    "menu-sounds-on": () => actions.setMenuSounds(true),
-    "menu-sounds-off": () => actions.setMenuSounds(false),
-    "enemy-sounds-on": () => actions.setEnemySounds(true),
-    "enemy-sounds-off": () => actions.setEnemySounds(false),
+    start: () => {
+      actions.start();
+    },
+    "start-level": () => {
+      actions.startLevel();
+    },
+    "open-volume": () => {
+      actions.openVolume();
+    },
+    "open-settings": () => {
+      actions.openSettings();
+    },
+    "open-help": () => {
+      actions.openHelp();
+    },
+    "back-to-menu": () => {
+      actions.backToMenu();
+    },
+    "leave-to-menu": () => {
+      actions.leaveToMenu();
+    },
+    "leave-to-help": () => {
+      actions.leaveToHelp();
+    },
+    "play-again": () => {
+      actions.playAgain();
+    },
+    "result-to-menu": () => {
+      actions.resultToMenu();
+    },
+    "show-stats": () => {
+      actions.showStats();
+    },
+    "unlock-sound": () => {
+      actions.unlockSound();
+    },
+    "toggle-menu-music": () => {
+      actions.toggleMenuMusic();
+    },
+    "game-music-on": () => {
+      actions.setGameMusic(true);
+    },
+    "game-music-off": () => {
+      actions.setGameMusic(false);
+    },
+    "menu-sounds-on": () => {
+      actions.setMenuSounds(true);
+    },
+    "menu-sounds-off": () => {
+      actions.setMenuSounds(false);
+    },
+    "enemy-sounds-on": () => {
+      actions.setEnemySounds(true);
+    },
+    "enemy-sounds-off": () => {
+      actions.setEnemySounds(false);
+    },
   };
 
   document.addEventListener("click", (event) => {
@@ -65,9 +103,15 @@ export function bindHandlers(actions: UiActions): void {
     }
   });
 
-  onValue("volume_range", "input", (value) => actions.setMenuMusicVolume(Number(value) / 100));
-  onValue("gameAudio_range", "input", (value) => actions.setGameMusicVolume(Number(value) / 100));
-  onValue("primerText", "input", (value) => actions.type(value));
+  onValue("volume_range", "input", (value) => {
+    actions.setMenuMusicVolume(Number(value) / 100);
+  });
+  onValue("gameAudio_range", "input", (value) => {
+    actions.setGameMusicVolume(Number(value) / 100);
+  });
+  onValue("primerText", "input", (value) => {
+    actions.type(value);
+  });
   onValue("gameDiff", "change", (value) => {
     if (isDifficultyId(value)) {
       actions.setDifficulty(value);
@@ -82,6 +126,8 @@ export function bindHandlers(actions: UiActions): void {
 }
 
 function onValue(id: string, type: "input" | "change", handler: (value: string) => void): void {
-  const element = byId<HTMLInputElement | HTMLSelectElement>(id);
-  element.addEventListener(type, () => handler(element.value));
+  const element = byId(id, HTMLElement) as HTMLInputElement | HTMLSelectElement;
+  element.addEventListener(type, () => {
+    handler(element.value);
+  });
 }

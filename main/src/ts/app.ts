@@ -15,7 +15,11 @@ import { Screens } from "./viewmanager/screens";
 function main(): void {
   const layout = new Layout();
   const screens = new Screens(layout);
-  const audio = new AudioManager({ onAutoplayBlocked: () => screens.show("soundUnlock") });
+  const audio = new AudioManager({
+    onAutoplayBlocked: () => {
+      screens.show("soundUnlock");
+    },
+  });
   const controller = new GameController({
     game: new Game(),
     stats: new SessionStats(),
@@ -28,7 +32,9 @@ function main(): void {
     menuView: new MenuView(),
   });
   bindHandlers(controller);
-  watchPageActivity((active) => audio.setSuspended(!active));
+  watchPageActivity((active) => {
+    audio.setSuspended(!active);
+  });
   layout.init();
   controller.init();
 }

@@ -1,11 +1,13 @@
 export function watchPageActivity(onChange: (active: boolean) => void): () => void {
   let focused = true;
-  const update = () => onChange(!document.hidden && focused);
-  const onBlur = () => {
+  const update = (): void => {
+    onChange(!document.hidden && focused);
+  };
+  const onBlur = (): void => {
     focused = false;
     update();
   };
-  const onFocus = () => {
+  const onFocus = (): void => {
     focused = true;
     update();
   };

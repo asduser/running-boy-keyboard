@@ -35,16 +35,26 @@ export class GameController implements UiActions {
         background: level.background,
       });
     });
-    game.on("typed", ({ round }) => deps.gameView.renderTyping(round));
-    game.on("heroMoved", (hero) => deps.gameView.moveHero(hero));
-    game.on("enemyMoved", (enemy) => deps.gameView.moveEnemy(enemy));
+    game.on("typed", ({ round }) => {
+      deps.gameView.renderTyping(round);
+    });
+    game.on("heroMoved", (hero) => {
+      deps.gameView.moveHero(hero);
+    });
+    game.on("enemyMoved", (enemy) => {
+      deps.gameView.moveEnemy(enemy);
+    });
     game.on("enemyBarked", () => {
       if (this.settings.enemySounds) {
         deps.audio.playEffect("bark");
       }
     });
-    game.on("roundEnded", (result) => this.onRoundEnded(result));
-    settings.subscribe((state) => this.applySettings(state));
+    game.on("roundEnded", (result) => {
+      this.onRoundEnded(result);
+    });
+    settings.subscribe((state) => {
+      this.applySettings(state);
+    });
   }
 
   init(): void {

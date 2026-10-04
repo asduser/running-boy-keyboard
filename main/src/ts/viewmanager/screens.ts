@@ -19,7 +19,11 @@ const ALL_POPUPS = Object.keys(POPUPS) as Popup[];
 
 export class Screens {
   constructor(private readonly layout: Layout) {
-    layout.onResize(() => ALL_POPUPS.forEach((popup) => layout.fitPopup(this.element(popup))));
+    layout.onResize(() => {
+      ALL_POPUPS.forEach((popup) => {
+        layout.fitPopup(this.element(popup));
+      });
+    });
   }
 
   show(popup: Popup): void {

@@ -16,7 +16,9 @@
       return () => set.delete(listener);
     }
     emit(type, payload) {
-      this.listeners[type]?.forEach((listener) => listener(payload));
+      this.listeners[type]?.forEach((listener) => {
+        listener(payload);
+      });
     }
   };
 
@@ -30,7 +32,9 @@
   var browserScheduler = {
     every(intervalMs, task) {
       const id = setInterval(task, intervalMs);
-      return () => clearInterval(id);
+      return () => {
+        clearInterval(id);
+      };
     }
   };
 
@@ -40,7 +44,7 @@
       __publicField(this, "text", text);
       __publicField(this, "chars");
       __publicField(this, "cursor", 0);
-      this.chars = [...text].map((char) => ({ char, typed: false, mistyped: false }));
+      this.chars = text.split("").map((char) => ({ char, typed: false, mistyped: false }));
     }
     get progress() {
       return this.cursor;
@@ -55,10 +59,10 @@
       return this.chars.map((state) => ({ ...state }));
     }
     check(input) {
-      if (this.finished || input.length <= this.cursor) {
+      const current = this.chars[this.cursor];
+      if (!current || input.length <= this.cursor) {
         return "ignored";
       }
-      const current = this.chars[this.cursor];
       if (input[this.cursor] !== current.char) {
         current.mistyped = true;
         return "mistake";
@@ -88,11 +92,16 @@
       this.abort();
       const { texts, enemy } = config.level;
       const text = texts[Math.floor(this.random() * texts.length)];
+      if (text === void 0) {
+        throw new Error(`Level ${String(config.level.number)} has no texts`);
+      }
       this.round = {
         config,
         typing: new TypingRound(text),
         startedAt: this.now(),
-        stopChase: this.scheduler.every(config.difficulty.enemyStepDelayMs, () => this.chaseStep()),
+        stopChase: this.scheduler.every(config.difficulty.enemyStepDelayMs, () => {
+          this.chaseStep();
+        }),
         score: 0,
         heroSteps: 1,
         hero: { position: HERO_START_POSITION, frame: 1 },
@@ -271,8 +280,7 @@
       __publicField(this, "wanted", /* @__PURE__ */ new Set());
       __publicField(this, "suspended", false);
       const basePath = options.basePath ?? MEDIA_PATH + "sounds/";
-      this.onAutoplayBlocked = options.onAutoplayBlocked ?? (() => {
-      });
+      this.onAutoplayBlocked = options.onAutoplayBlocked ?? (() => void 0);
       this.music = createAll(MUSIC, basePath, true);
       this.effects = createAll(EFFECTS, basePath, false);
     }
@@ -300,15 +308,16 @@
       const effect = this.effects[id];
       effect.pause();
       effect.currentTime = 0;
-      effect.play().catch(() => {
-      });
+      effect.play().catch(() => void 0);
     }
     setSuspended(suspended) {
       this.suspended = suspended;
       this.all().forEach((sound) => sound.muted = suspended);
     }
     unlock() {
-      this.all().filter((sound) => sound.paused).forEach((sound) => this.prime(sound));
+      this.all().filter((sound) => sound.paused).forEach((sound) => {
+        this.prime(sound);
+      });
     }
     prime(sound) {
       sound.muted = true;
@@ -317,8 +326,7 @@
           sound.pause();
           sound.currentTime = 0;
         }
-      }).catch(() => {
-      }).finally(() => {
+      }).catch(() => void 0).finally(() => {
         sound.muted = this.suspended;
       });
     }
@@ -341,7 +349,9 @@
   // main/src/ts/media/pageActivity.ts
   function watchPageActivity(onChange) {
     let focused = true;
-    const update = () => onChange(!document.hidden && focused);
+    const update = () => {
+      onChange(!document.hidden && focused);
+    };
     const onBlur = () => {
       focused = false;
       update();
@@ -449,7 +459,9 @@
     }
     update(changes) {
       this.state = { ...this.state, ...changes };
-      this.listeners.forEach((listener) => listener(this.state));
+      this.listeners.forEach((listener) => {
+        listener(this.state);
+      });
     }
     subscribe(listener) {
       this.listeners.add(listener);
@@ -470,16 +482,26 @@
           background: level.background
         });
       });
-      game.on("typed", ({ round }) => deps.gameView.renderTyping(round));
-      game.on("heroMoved", (hero) => deps.gameView.moveHero(hero));
-      game.on("enemyMoved", (enemy) => deps.gameView.moveEnemy(enemy));
+      game.on("typed", ({ round }) => {
+        deps.gameView.renderTyping(round);
+      });
+      game.on("heroMoved", (hero) => {
+        deps.gameView.moveHero(hero);
+      });
+      game.on("enemyMoved", (enemy) => {
+        deps.gameView.moveEnemy(enemy);
+      });
       game.on("enemyBarked", () => {
         if (this.settings.enemySounds) {
           deps.audio.playEffect("bark");
         }
       });
-      game.on("roundEnded", (result) => this.onRoundEnded(result));
-      settings.subscribe((state) => this.applySettings(state));
+      game.on("roundEnded", (result) => {
+        this.onRoundEnded(result);
+      });
+      settings.subscribe((state) => {
+        this.applySettings(state);
+      });
     }
     init() {
       const { screens, menuView, gameView, mainMenu, audio } = this.deps;
@@ -651,10 +673,10 @@
   }
 
   // main/src/ts/viewmanager/dom.ts
-  function byId(id) {
+  function byId(id, type = HTMLElement) {
     const element = document.getElementById(id);
-    if (!element) {
-      throw new Error(`Missing element #${id}`);
+    if (!(element instanceof type)) {
+      throw new Error(`Missing element #${id} of type ${type.name}`);
     }
     return element;
   }
@@ -667,10 +689,10 @@
     showRound(round, look) {
       this.look = look;
       this.setBackground(look.background);
-      const input = byId("primerText");
+      const input = byId("primerText", HTMLInputElement);
       input.value = "";
       input.maxLength = round.length;
-      byId("progressBar").max = round.length;
+      byId("progressBar", HTMLProgressElement).max = round.length;
       this.renderTyping(round);
       this.moveHero(round.hero);
       this.moveEnemy(round.enemy);
@@ -687,17 +709,17 @@
           return span;
         })
       );
-      byId("progressBar").value = round.progress;
+      byId("progressBar", HTMLProgressElement).value = round.progress;
       byId("divScoreVal").textContent = String(round.score);
     }
     moveHero(hero) {
       if (this.look) {
-        this.placeSprite(byId("spriteBoy"), this.look.heroSprites, hero);
+        this.placeSprite(byId("spriteBoy", HTMLImageElement), this.look.heroSprites, hero);
       }
     }
     moveEnemy(enemy) {
       if (this.look) {
-        this.placeSprite(byId("spriteEnemy"), this.look.enemySprites, enemy);
+        this.placeSprite(byId("spriteEnemy", HTMLImageElement), this.look.enemySprites, enemy);
       }
     }
     hide() {
@@ -725,25 +747,63 @@
   // main/src/ts/viewmanager/handlers.ts
   function bindHandlers(actions) {
     const clickActions = {
-      start: () => actions.start(),
-      "start-level": () => actions.startLevel(),
-      "open-volume": () => actions.openVolume(),
-      "open-settings": () => actions.openSettings(),
-      "open-help": () => actions.openHelp(),
-      "back-to-menu": () => actions.backToMenu(),
-      "leave-to-menu": () => actions.leaveToMenu(),
-      "leave-to-help": () => actions.leaveToHelp(),
-      "play-again": () => actions.playAgain(),
-      "result-to-menu": () => actions.resultToMenu(),
-      "show-stats": () => actions.showStats(),
-      "unlock-sound": () => actions.unlockSound(),
-      "toggle-menu-music": () => actions.toggleMenuMusic(),
-      "game-music-on": () => actions.setGameMusic(true),
-      "game-music-off": () => actions.setGameMusic(false),
-      "menu-sounds-on": () => actions.setMenuSounds(true),
-      "menu-sounds-off": () => actions.setMenuSounds(false),
-      "enemy-sounds-on": () => actions.setEnemySounds(true),
-      "enemy-sounds-off": () => actions.setEnemySounds(false)
+      start: () => {
+        actions.start();
+      },
+      "start-level": () => {
+        actions.startLevel();
+      },
+      "open-volume": () => {
+        actions.openVolume();
+      },
+      "open-settings": () => {
+        actions.openSettings();
+      },
+      "open-help": () => {
+        actions.openHelp();
+      },
+      "back-to-menu": () => {
+        actions.backToMenu();
+      },
+      "leave-to-menu": () => {
+        actions.leaveToMenu();
+      },
+      "leave-to-help": () => {
+        actions.leaveToHelp();
+      },
+      "play-again": () => {
+        actions.playAgain();
+      },
+      "result-to-menu": () => {
+        actions.resultToMenu();
+      },
+      "show-stats": () => {
+        actions.showStats();
+      },
+      "unlock-sound": () => {
+        actions.unlockSound();
+      },
+      "toggle-menu-music": () => {
+        actions.toggleMenuMusic();
+      },
+      "game-music-on": () => {
+        actions.setGameMusic(true);
+      },
+      "game-music-off": () => {
+        actions.setGameMusic(false);
+      },
+      "menu-sounds-on": () => {
+        actions.setMenuSounds(true);
+      },
+      "menu-sounds-off": () => {
+        actions.setMenuSounds(false);
+      },
+      "enemy-sounds-on": () => {
+        actions.setEnemySounds(true);
+      },
+      "enemy-sounds-off": () => {
+        actions.setEnemySounds(false);
+      }
     };
     document.addEventListener("click", (event) => {
       const target = event.target.closest("[data-action]");
@@ -758,9 +818,15 @@
         actions.hover();
       }
     });
-    onValue("volume_range", "input", (value) => actions.setMenuMusicVolume(Number(value) / 100));
-    onValue("gameAudio_range", "input", (value) => actions.setGameMusicVolume(Number(value) / 100));
-    onValue("primerText", "input", (value) => actions.type(value));
+    onValue("volume_range", "input", (value) => {
+      actions.setMenuMusicVolume(Number(value) / 100);
+    });
+    onValue("gameAudio_range", "input", (value) => {
+      actions.setGameMusicVolume(Number(value) / 100);
+    });
+    onValue("primerText", "input", (value) => {
+      actions.type(value);
+    });
     onValue("gameDiff", "change", (value) => {
       if (isDifficultyId(value)) {
         actions.setDifficulty(value);
@@ -774,8 +840,10 @@
     });
   }
   function onValue(id, type, handler) {
-    const element = byId(id);
-    element.addEventListener(type, () => handler(element.value));
+    const element = byId(id, HTMLElement);
+    element.addEventListener(type, () => {
+      handler(element.value);
+    });
   }
 
   // main/src/ts/viewmanager/layout.ts
@@ -796,12 +864,18 @@
     init() {
       const onResize = () => {
         this.fitStage();
-        this.resizeListeners.forEach((listener) => listener());
+        this.resizeListeners.forEach((listener) => {
+          listener();
+        });
       };
       window.addEventListener("resize", onResize);
       window.addEventListener("orientationchange", onResize);
-      window.visualViewport?.addEventListener("resize", () => this.fitStage());
-      window.visualViewport?.addEventListener("scroll", () => this.fitStage());
+      window.visualViewport?.addEventListener("resize", () => {
+        this.fitStage();
+      });
+      window.visualViewport?.addEventListener("scroll", () => {
+        this.fitStage();
+      });
       onResize();
     }
     onResize(listener) {
@@ -833,7 +907,10 @@
       body.style.backgroundSize = `${BG_WIDTH * bgScale}px ${BG_HEIGHT * bgScale}px`;
       body.style.backgroundPosition = `center ${viewTop + height - BG_HEIGHT * bgScale}px`;
       const groundTop = viewTop + height - BG_GROUND_HEIGHT * bgScale;
-      const stageTop = Math.max(viewTop - STAGE_TOP_SPACE * scale, groundTop - STAGE_GROUND_Y * scale);
+      const stageTop = Math.max(
+        viewTop - STAGE_TOP_SPACE * scale,
+        groundTop - STAGE_GROUND_Y * scale
+      );
       const stage = byId("wrapper");
       stage.style.left = `${(width - STAGE_WIDTH * scale) / 2}px`;
       stage.style.top = `${stageTop}px`;
@@ -845,7 +922,7 @@
   var MenuView = class {
     renderSettings(settings) {
       const difficulty = DIFFICULTIES[settings.difficulty];
-      byId("gameDiff").value = difficulty.id;
+      byId("gameDiff", HTMLSelectElement).value = difficulty.id;
       byId("optionValueSpeed").textContent = difficulty.typingSpeed;
       byId("optionValueError").textContent = difficulty.errorImpact;
       byId("optionValueTime").textContent = difficulty.totalTime;
@@ -858,8 +935,12 @@
       const musicButton = byId("mybtnBg");
       musicButton.classList.toggle("on", settings.menuMusic);
       musicButton.classList.toggle("off", !settings.menuMusic);
-      byId("volume_range").value = String(Math.round(settings.menuMusicVolume * 100));
-      byId("gameAudio_range").value = String(Math.round(settings.gameMusicVolume * 100));
+      byId("volume_range", HTMLInputElement).value = String(
+        Math.round(settings.menuMusicVolume * 100)
+      );
+      byId("gameAudio_range", HTMLInputElement).value = String(
+        Math.round(settings.gameMusicVolume * 100)
+      );
       this.renderToggle("musicInGameOn", "musicInGameOff", settings.gameMusic);
       this.renderToggle("VolumeBtOn", "VolumeBtOff", settings.menuSounds);
       this.renderToggle("VolumeDogOn", "VolumeDogOff", settings.enemySounds);
@@ -904,7 +985,11 @@
   var Screens = class {
     constructor(layout) {
       __publicField(this, "layout", layout);
-      layout.onResize(() => ALL_POPUPS.forEach((popup) => layout.fitPopup(this.element(popup))));
+      layout.onResize(() => {
+        ALL_POPUPS.forEach((popup) => {
+          layout.fitPopup(this.element(popup));
+        });
+      });
     }
     show(popup) {
       const element = this.element(popup);
@@ -926,7 +1011,11 @@
   function main() {
     const layout = new Layout();
     const screens = new Screens(layout);
-    const audio = new AudioManager({ onAutoplayBlocked: () => screens.show("soundUnlock") });
+    const audio = new AudioManager({
+      onAutoplayBlocked: () => {
+        screens.show("soundUnlock");
+      }
+    });
     const controller = new GameController({
       game: new Game(),
       stats: new SessionStats(),
@@ -939,7 +1028,9 @@
       menuView: new MenuView()
     });
     bindHandlers(controller);
-    watchPageActivity((active) => audio.setSuspended(!active));
+    watchPageActivity((active) => {
+      audio.setSuspended(!active);
+    });
     layout.init();
     controller.init();
   }

@@ -14,10 +14,10 @@ export class GameView {
   showRound(round: RoundSnapshot, look: RoundLook): void {
     this.look = look;
     this.setBackground(look.background);
-    const input = byId<HTMLInputElement>("primerText");
+    const input = byId("primerText", HTMLInputElement);
     input.value = "";
     input.maxLength = round.length;
-    byId<HTMLProgressElement>("progressBar").max = round.length;
+    byId("progressBar", HTMLProgressElement).max = round.length;
     this.renderTyping(round);
     this.moveHero(round.hero);
     this.moveEnemy(round.enemy);
@@ -35,19 +35,19 @@ export class GameView {
         return span;
       }),
     );
-    byId<HTMLProgressElement>("progressBar").value = round.progress;
+    byId("progressBar", HTMLProgressElement).value = round.progress;
     byId("divScoreVal").textContent = String(round.score);
   }
 
   moveHero(hero: Actor): void {
     if (this.look) {
-      this.placeSprite(byId<HTMLImageElement>("spriteBoy"), this.look.heroSprites, hero);
+      this.placeSprite(byId("spriteBoy", HTMLImageElement), this.look.heroSprites, hero);
     }
   }
 
   moveEnemy(enemy: Actor): void {
     if (this.look) {
-      this.placeSprite(byId<HTMLImageElement>("spriteEnemy"), this.look.enemySprites, enemy);
+      this.placeSprite(byId("spriteEnemy", HTMLImageElement), this.look.enemySprites, enemy);
     }
   }
 

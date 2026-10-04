@@ -5,6 +5,8 @@ export interface Scheduler {
 export const browserScheduler: Scheduler = {
   every(intervalMs, task) {
     const id = setInterval(task, intervalMs);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+    };
   },
 };

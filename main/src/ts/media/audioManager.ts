@@ -14,7 +14,7 @@ export class AudioManager {
 
   constructor(options: AudioManagerOptions = {}) {
     const basePath = options.basePath ?? MEDIA_PATH + "sounds/";
-    this.onAutoplayBlocked = options.onAutoplayBlocked ?? (() => {});
+    this.onAutoplayBlocked = options.onAutoplayBlocked ?? (() => undefined);
     this.music = createAll(MUSIC, basePath, true);
     this.effects = createAll(EFFECTS, basePath, false);
   }
@@ -46,7 +46,7 @@ export class AudioManager {
     const effect = this.effects[id];
     effect.pause();
     effect.currentTime = 0;
-    effect.play().catch(() => {});
+    effect.play().catch(() => undefined);
   }
 
   setSuspended(suspended: boolean): void {
@@ -57,7 +57,9 @@ export class AudioManager {
   unlock(): void {
     this.all()
       .filter((sound) => sound.paused)
-      .forEach((sound) => this.prime(sound));
+      .forEach((sound) => {
+        this.prime(sound);
+      });
   }
 
   private prime(sound: HTMLAudioElement): void {
@@ -70,7 +72,7 @@ export class AudioManager {
           sound.currentTime = 0;
         }
       })
-      .catch(() => {})
+      .catch(() => undefined)
       .finally(() => {
         sound.muted = this.suspended;
       });

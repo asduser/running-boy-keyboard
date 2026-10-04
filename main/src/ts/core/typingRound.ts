@@ -7,7 +7,7 @@ export class TypingRound {
   private cursor = 0;
 
   constructor(readonly text: string) {
-    this.chars = [...text].map((char) => ({ char, typed: false, mistyped: false }));
+    this.chars = text.split("").map((char) => ({ char, typed: false, mistyped: false }));
   }
 
   get progress(): number {
@@ -27,10 +27,10 @@ export class TypingRound {
   }
 
   check(input: string): TypingResult {
-    if (this.finished || input.length <= this.cursor) {
+    const current = this.chars[this.cursor];
+    if (!current || input.length <= this.cursor) {
       return "ignored";
     }
-    const current = this.chars[this.cursor];
     if (input[this.cursor] !== current.char) {
       current.mistyped = true;
       return "mistake";

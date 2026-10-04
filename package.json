@@ -3,15 +3,25 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "build": "esbuild main/src/ts/app.ts --bundle --format=iife --target=es2020 --outfile=main/src/app.js",
     "watch": "npm run build -- --watch",
-    "check": "tsc"
+    "check": "tsc",
+    "lint": "eslint main/src/ts",
+    "test": "jest"
   },
   "devDependencies": {
-    "esbuild": "^0.28.2",
-    "typescript": "^7.0.2"
+    "@eslint/js": "10.0.1",
+    "@swc/core": "1.16.13",
+    "@swc/jest": "0.2.39",
+    "@types/jest": "30.0.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.12.0",
+    "globals": "17.13.0",
+    "jest": "30.5.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.0"
   }
 }

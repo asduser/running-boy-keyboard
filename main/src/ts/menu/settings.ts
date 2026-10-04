@@ -39,7 +39,9 @@ export class Settings {
 
   update(changes: Partial<SettingsState>): void {
     this.state = { ...this.state, ...changes };
-    this.listeners.forEach((listener) => listener(this.state));
+    this.listeners.forEach((listener) => {
+      listener(this.state);
+    });
   }
 
   subscribe(listener: SettingsListener): () => void {
