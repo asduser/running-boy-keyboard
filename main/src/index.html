@@ -6,48 +6,18 @@
     <title>Running Boy Keyboard</title>
     <link rel="icon" type="image/png" href="../../assets/icons/favicon.png" />
     <link rel="stylesheet" href="style.css" type="text/css" />
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
   </head>
-  <body onload="exampleText()">
+  <body>
     <div id="wrapper">
       <div id="generalMenuDiv">
-        <div
-          id="generalMenuBtn"
-          onclick="
-            popupOpen();
-            hideStuff('wrapper_div');
-            gameAudio.pause();
-            checkBgMusic();
-            clearInterval(showSpritesEnemy);
-            hideScoreVal();
-            hideGeneralMenuDiv();
-            hideBGfont();
-            levelValue = 0;
-            prevParamsDelete();
-            minMaxTimeVal();
-          "
-        ></div>
-        <div
-          id="generalHelpBtn"
-          onclick="
-            showHelp();
-            hideStuff('wrapper_div');
-            gameAudio.pause();
-            checkBgMusic();
-            clearInterval(showSpritesEnemy);
-            hideScoreVal();
-            hideGeneralMenuDiv();
-            hideBGfont();
-            levelValue = 0;
-            prevParamsDelete();
-            minMaxTimeVal();
-          "
-        ></div>
+        <div id="generalMenuBtn" data-action="leave-to-menu"></div>
+        <div id="generalHelpBtn" data-action="leave-to-help"></div>
       </div>
       <div id="wrapper_div">
         <div id="writerBlock">
           <div id="textField"></div>
-          <input type="text" id="primerText" onkeyup="primer()" onfocus="this.value = ''" /><br />
+          <input type="text" id="primerText" /><br />
         </div>
         <img
           id="spriteBoy"
@@ -72,12 +42,6 @@
             width: 63px;
           "
         />
-        <audio id="gameAudio" loop>
-          <source src="../../media/sounds/fontGameMusic.ogg" type="audio/ogg; codecs=vorbis" />
-        </audio>
-        <audio id="enemyAudio">
-          <source src="../../media/sounds/dogAgressive.wav" type="audio/wav;" />
-        </audio>
       </div>
       <div id="GameScoreDiv">
         <h1>Your score:</h1>
@@ -91,34 +55,16 @@
         <hr class="hr2" />
         <div id="boyMenuDiv">
           <ul id="boyMenu">
-            <li onmouseover="mouseoversound.playclip()" id="startBtn" onclick="showLevelChecker()">
+            <li id="startBtn" data-action="start" data-hover-sound>
               Start
             </li>
-            <li
-              onmouseover="mouseoversound.playclip()"
-              onclick="
-                showMiscGame();
-                clicksound.playclip();
-              "
-            >
+            <li data-action="open-volume" data-hover-sound>
               Volume
             </li>
-            <li
-              onmouseover="mouseoversound.playclip()"
-              onclick="
-                showOption();
-                clicksound.playclip();
-              "
-            >
+            <li data-action="open-settings" data-hover-sound>
               Settings
             </li>
-            <li
-              onmouseover="mouseoversound.playclip()"
-              onclick="
-                showHelp();
-                clicksound.playclip();
-              "
-            >
+            <li data-action="open-help" data-hover-sound>
               Help
             </li>
           </ul>
@@ -126,9 +72,7 @@
         <div class="popup_artefact"></div>
         <div class="popup_artefact"></div>
         <div class="popup_artefact"></div>
-        <audio id="mySound" src="../../media/sounds/buttonMenu_click.mp3"></audio>
       </div>
-      <div id="mysoundEl"></div>
     </div>
     <div id="parent_miscGame">
       <div id="miscGame">
@@ -137,7 +81,7 @@
         <div id="miscGame_info">
           <p align="center"><b>Music in menu</b></p>
           <p class="miscGame_Titles">On \ Off</p>
-          <input type="button" id="mybtnBg" onclick="playBgMusic()" />
+          <input type="button" id="mybtnBg" data-action="toggle-menu-music" />
           <div class="clear"></div>
           <p class="miscGame_Titles">Volume label</p>
           <input
@@ -146,17 +90,12 @@
             max="100"
             value="40"
             id="volume_range"
-            oninput="document.getElementById('myaudio').volume = this.value / 100"
-            onchange="this.oninput()"
           />
-          <audio id="myaudio" loop>
-            <source src="../../media/sounds/main_sound.ogg" type="audio/ogg; codecs=vorbis" />
-          </audio>
           <p align="center"><b>Music in game</b></p>
           <div class="miscGame_Titles">Play music</div>
           <div class="miscGame_GMvalue">
-            <a id="musicInGameOn" onclick="GMparamOn()">Yes</a> \
-            <a id="musicInGameOff" onclick="GMparamOff()">No</a>
+            <a id="musicInGameOn" data-action="game-music-on">Yes</a> \
+            <a id="musicInGameOff" data-action="game-music-off">No</a>
           </div>
           <p class="miscGame_Titles">Volume label</p>
           <input
@@ -165,28 +104,18 @@
             max="100"
             value="90"
             id="gameAudio_range"
-            oninput="document.getElementById('gameAudio').volume = this.value / 100"
-            onchange="this.oninput()"
           />
           <div class="clear"></div>
           <p align="center"><b>Sounds & signals</b></p>
           <div class="miscGame_Titles">Button sounds in menu</div>
-          <div id="VolumeBtOn" onclick="MenuButtonOn()">On</div>
-          <div id="VolumeBtOff">Off</div>
+          <div id="VolumeBtOn" data-action="menu-sounds-on">On</div>
+          <div id="VolumeBtOff" data-action="menu-sounds-off">Off</div>
           <div class="clear"></div>
           <div class="miscGame_Titles">Enemy sounds</div>
-          <div id="VolumeDogOn" onclick="VolumeDogOn()">On</div>
-          <div id="VolumeDogOff" onclick="VolumeDogOff()">Off</div>
+          <div id="VolumeDogOn" data-action="enemy-sounds-on">On</div>
+          <div id="VolumeDogOff" data-action="enemy-sounds-off">Off</div>
         </div>
-        <input
-          type="button"
-          id="help_back"
-          value="Back"
-          onclick="
-            hideHelp();
-            clicksound.playclip();
-          "
-        />
+        <input type="button" class="help_back" value="Back" data-action="back-to-menu" />
       </div>
     </div>
     <div id="parent_option">
@@ -195,17 +124,10 @@
         <hr class="hr2" />
         <div id="option_info">
           <p align="center"><b>Difficulty</b></p>
-          <select
-            name="gameDiff"
-            id="gameDiff"
-            onchange="
-              diffCheker();
-              switchGmeOverPoint();
-            "
-          >
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard" selected>Hard</option>
+          <select name="gameDiff" id="gameDiff">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard" selected>Hard</option>
           </select>
           <div class="option_diffTitles">Typing speed</div>
           <div class="option_diffValues" id="optionValueSpeed">Low</div>
@@ -218,41 +140,25 @@
           <form id="heroChoise">
             <div class="heroValueDiv">
               <img src="../../assets/sprites/rb_sprites/rb1_mini.png" class="heroValue" />
-              <p><input name="heroValue" value="" type="radio" checked id="hero1" />Model №1</p>
+              <p><input name="heroValue" value="model1" type="radio" checked />Model №1</p>
             </div>
             <div class="heroValueDiv">
               <img src="../../assets/sprites/rb3_sprites/rb1_mini.png" class="heroValue" />
               <p>
-                <input
-                  name="heroValue"
-                  value="3"
-                  type="radio"
-                  id="hero1"
-                  id="hero1"
-                  id="hero3"
-                />Model №2
+                <input name="heroValue" value="model2" type="radio" />Model №2
               </p>
             </div>
             <div class="heroValueDiv">
               <img src="../../assets/sprites/rb4_sprites/rb1_mini.png" class="heroValue" />
-              <p><input name="heroValue" value="4" type="radio" id="hero1" id="hero4" />Model №3</p>
+              <p><input name="heroValue" value="model3" type="radio" />Model №3</p>
             </div>
             <div class="heroValueDiv">
               <img src="../../assets/sprites/rb5_sprites/rb1_mini.png" class="heroValue" />
-              <p><input name="heroValue" value="5" type="radio" id="hero5" />Model №4</p>
+              <p><input name="heroValue" value="model4" type="radio" />Model №4</p>
             </div>
           </form>
         </div>
-        <input
-          type="button"
-          id="help_back"
-          value="Back"
-          onclick="
-            hideHelp();
-            clicksound.playclip();
-            optionCheck();
-          "
-        />
+        <input type="button" class="help_back" value="Back" data-action="back-to-menu" />
       </div>
     </div>
     <div id="parent_help">
@@ -280,15 +186,7 @@
             <li>To win, you must correctly enter all the characters.</li>
           </ol>
         </div>
-        <input
-          type="button"
-          id="help_back"
-          value="Back"
-          onclick="
-            hideHelp();
-            clicksound.playclip();
-          "
-        />
+        <input type="button" class="help_back" value="Back" data-action="back-to-menu" />
       </div>
     </div>
     <div id="parent_level1Popup">
@@ -314,20 +212,7 @@
             type="button"
             value="Start"
             id="level1Popup_startBtn"
-            onclick="
-              document.getElementById('parent_popup').style.display = 'none';
-              showStuff('wrapper_div');
-              checkHeroValue();
-              runHeroValue();
-              myaudio.pause();
-              checkGMvalue();
-              runMovingEnemy();
-              showScoreVal();
-              hideLevel1popup();
-              clicksound.playclip();
-              showGeneralMenuDiv();
-              showBGfont();
-            "
+            data-action="start-level"
           />
         </div>
       </div>
@@ -338,56 +223,9 @@
         <hr class="hr4" />
         <div id="gameOverPopup_info">
           <div id="gameOverPopupBoy"></div>
-          <input
-            id="gameOver_againBtn"
-            type="button"
-            value="Again"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              document.getElementById('parent_popup').style.display = 'none';
-              showStuff('wrapper_div');
-              checkHeroValue();
-              runHeroValue();
-              checkGMvalue();
-              runMovingEnemy();
-              showScoreVal();
-              showGeneralMenuDiv();
-              showBGfont();
-              hideGOpopup();
-              summaryStarts += 1;
-              t += 1;
-              getNewTime = new Date();
-            "
-          />
-          <input
-            id="gameOver_menuBtn"
-            type="button"
-            value="Main Menu"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              popupOpen();
-              hideStuff('wrapper_div');
-              checkBgMusic();
-              hideGOpopup();
-            "
-          />
-          <input
-            id="gameOver_statBtn"
-            type="button"
-            value="Statistics"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              hideGOpopup();
-              showStatsPopup();
-              roundTimeChecker();
-            "
-          />
-          <audio id="gameOverAudio">
-            <source src="../../media/sounds/gameOver.wav" type="audio/wav;" />
-          </audio>
+          <input id="gameOver_againBtn" type="button" value="Again" data-action="play-again" data-hover-sound />
+          <input id="gameOver_menuBtn" type="button" value="Main Menu" data-action="result-to-menu" data-hover-sound />
+          <input id="gameOver_statBtn" type="button" value="Statistics" data-action="show-stats" data-hover-sound />
         </div>
       </div>
     </div>
@@ -397,55 +235,9 @@
         <hr class="hr4" />
         <div id="winnerPopup_info">
           <div id="winnerPopupBoy"></div>
-          <input
-            id="winner_againBtn"
-            type="button"
-            value="Again"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              document.getElementById('parent_popup').style.display = 'none';
-              showStuff('wrapper_div');
-              checkHeroValue();
-              runHeroValue();
-              checkGMvalue();
-              runMovingEnemy();
-              showScoreVal();
-              showGeneralMenuDiv();
-              showBGfont();
-              hideWinnerL1popup();
-              summaryStarts += 1;
-              t += 1;
-              getNewTime = new Date();
-            "
-          />
-          <input
-            id="winner_menuBtn"
-            type="button"
-            value="Main Menu"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              popupOpen();
-              hideStuff('wrapper_div');
-              checkBgMusic();
-              hideWinnerL1popup();
-            "
-          />
-          <input
-            id="winner_statBtn"
-            type="button"
-            value="Statistics"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              showStatsPopup();
-              roundTimeChecker();
-            "
-          />
-          <audio id="winnerAudio">
-            <source src="../../media/sounds/winnerPopup.wav" type="audio/wav;" />
-          </audio>
+          <input id="winner_againBtn" type="button" value="Again" data-action="play-again" data-hover-sound />
+          <input id="winner_menuBtn" type="button" value="Main Menu" data-action="result-to-menu" data-hover-sound />
+          <input id="winner_statBtn" type="button" value="Statistics" data-action="show-stats" data-hover-sound />
         </div>
       </div>
     </div>
@@ -490,20 +282,7 @@
           <div class="statsTimeTitles">Min. session:</div>
           <div id="minTimeVal">0</div>
           <div class="clear"></div>
-          <input
-            id="stats_menuBtn"
-            type="button"
-            value="Main Menu"
-            onmouseover="mouseoversound.playclip()"
-            onclick="
-              clicksound.playclip();
-              popupOpen();
-              hideStuff('wrapper_div');
-              checkBgMusic();
-              hideWinnerL1popup();
-              hideStatsPopup();
-            "
-          />
+          <input id="stats_menuBtn" type="button" value="Main Menu" data-action="result-to-menu" data-hover-sound />
         </div>
       </div>
     </div>
@@ -512,7 +291,7 @@
         <h1>Running Boy Keyboard</h1>
         <hr class="hr2" />
         <p>Your browser keeps the sound off until you interact with the page.</p>
-        <input type="button" id="soundUnlock_btn" value="Continue" onclick="unlockSound()" />
+        <input type="button" id="soundUnlock_btn" value="Continue" data-action="unlock-sound" />
       </div>
     </div>
   </body>
