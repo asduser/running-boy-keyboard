@@ -553,6 +553,7 @@ var POPUP_IDS = [
   "parent_winnerPopup",
   "parent_statsPopup",
 ];
+var windowFocused = true;
 var lastViewportWidth = 0;
 var stageScale = 1;
 
@@ -643,6 +644,14 @@ function allSounds() {
   return sounds;
 }
 
+function isPageInactive() {
+  return document.hidden || !windowFocused;
+}
+
+function updateSoundsMuted() {
+  muteAllSounds(isPageInactive());
+}
+
 function muteAllSounds(muted) {
   var sounds = allSounds();
   for (var n = 0; n < sounds.length; n++) {
@@ -678,11 +687,17 @@ function primeSound(sound) {
       })
       .catch(function () {})
       .then(function () {
-        sound.muted = document.hidden;
+        sound.muted = isPageInactive();
       });
   }
 }
 
-document.addEventListener("visibilitychange", function () {
-  muteAllSounds(document.hidden);
+document.addEventListener("visibilitychange", updateSoundsMuted);
+window.addEventListener("blur", function () {
+  windowFocused = false;
+  updateSoundsMuted();
+});
+window.addEventListener("focus", function () {
+  windowFocused = true;
+  updateSoundsMuted();
 });

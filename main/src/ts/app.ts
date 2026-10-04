@@ -79,6 +79,7 @@ let minScoreVal = 0;
 let maxTimeVal = 0;
 let minTimeVal = 0;
 
+let windowFocused = true;
 let lastViewportWidth = 0;
 let stageScale = 1;
 const lastDisplay = new WeakMap<HTMLElement, string>();
@@ -683,6 +684,14 @@ function allSounds(): HTMLAudioElement[] {
   return sounds;
 }
 
+function isPageInactive(): boolean {
+  return document.hidden || !windowFocused;
+}
+
+function updateSoundsMuted(): void {
+  muteAllSounds(isPageInactive());
+}
+
 function muteAllSounds(muted: boolean): void {
   for (const sound of allSounds()) {
     sound.muted = muted;
@@ -716,7 +725,7 @@ function primeSound(sound: HTMLAudioElement): void {
     })
     .catch(() => {})
     .then(() => {
-      sound.muted = document.hidden;
+      sound.muted = isPageInactive();
     });
 }
 
@@ -770,8 +779,14 @@ Object.assign(window, {
 });
 
 document.addEventListener("DOMContentLoaded", initResponsive);
-document.addEventListener("visibilitychange", () => {
-  muteAllSounds(document.hidden);
+document.addEventListener("visibilitychange", updateSoundsMuted);
+window.addEventListener("blur", () => {
+  windowFocused = false;
+  updateSoundsMuted();
+});
+window.addEventListener("focus", () => {
+  windowFocused = true;
+  updateSoundsMuted();
 });
 
 export {};
