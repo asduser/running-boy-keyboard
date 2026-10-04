@@ -4,7 +4,7 @@
 
 ## Description
 
-<img src="main/images/screenRB.png?raw=true" alt="running boy keyboard" />
+<img src="assets/images/screenRB.png?raw=true" alt="running boy keyboard" />
 
 <b>Rules:</b>
 

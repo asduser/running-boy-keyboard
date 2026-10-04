@@ -1,4 +1,5 @@
-var ASSET_PATH = "../";
+var ASSETS_PATH = "../../assets/";
+var MEDIA_PATH = "../../media/";
 
 function exampleText() {
   hideBGfont();
@@ -100,7 +101,7 @@ function primer() {
 }
 function changeSpriteBoy() {
   spriteUrlThis = spriteUrlCounter % 4;
-  spriteBoyUrl = ASSET_PATH + "rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
+  spriteBoyUrl = ASSETS_PATH + "sprites/rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
   document.spriteboy_img.src = spriteBoyUrl;
 }
 function scrollSpriteBoy() {
@@ -112,7 +113,7 @@ function scrollSpriteBoy() {
 }
 function changeSpriteEnemy() {
   spriteEnemyUrlThis = spriteEnemyUrlCounter % 4;
-  spriteEnemyUrl = ASSET_PATH + "rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
+  spriteEnemyUrl = ASSETS_PATH + "sprites/rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
   document.spriteEnemy_img.src = spriteEnemyUrl;
   scrollingEnemy = document.getElementById("spriteEnemy");
   curPosEnemy = scrollingEnemy.style.left;
@@ -282,7 +283,7 @@ function hideBGfont() {
   setBackground("bg_font_mini2.jpg");
 }
 function setBackground(file) {
-  document.body.style.backgroundImage = "url('" + ASSET_PATH + file + "')";
+  document.body.style.backgroundImage = "url('" + ASSETS_PATH + "images/" + file + "')";
 }
 function MenuButtonOn() {
   volumeValueOn = document.getElementById("VolumeBtOn");
@@ -327,8 +328,8 @@ function soundHoverMenu() {
     ogg: "audio/ogg",
     wav: "audio/wav",
   };
-  mouseoversound = b(ASSET_PATH + "../sounds/button19.wav");
-  clicksound = b(ASSET_PATH + "../sounds/click.ogg");
+  mouseoversound = b(MEDIA_PATH + "sounds/button19.wav");
+  clicksound = b(MEDIA_PATH + "sounds/click.ogg");
 }
 function soundHoverMenu1() {
   function b(b) {
@@ -356,8 +357,8 @@ function soundHoverMenu1() {
       },
     };
   }
-  mouseoversound = b(ASSET_PATH + "../sounds/soundsOff.wav");
-  clicksound = b(ASSET_PATH + "../sounds/soundsOff.wav");
+  mouseoversound = b(MEDIA_PATH + "sounds/soundsOff.wav");
+  clicksound = b(MEDIA_PATH + "sounds/soundsOff.wav");
 }
 function playBgMusic() {
   buttona = document.getElementById("mybtnBg");
@@ -368,13 +369,13 @@ function playBgMusic() {
     if (playing) {
       playing.catch(showSoundUnlock);
     }
-    buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOn.png')";
+    buttona.style.backgroundImage = "url('" + ASSETS_PATH + "images/bgMusicOn.png')";
     buttona.style.color = "White";
     bgMusicValue = 2;
   } else {
     if (0 == myaudio.paused) {
       myaudio.pause();
-      buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOff.png')";
+      buttona.style.backgroundImage = "url('" + ASSETS_PATH + "images/bgMusicOff.png')";
       buttona.style.color = "Black";
       bgMusicValue = 0;
     }

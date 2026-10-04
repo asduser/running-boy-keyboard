@@ -12,7 +12,8 @@ declare global {
   }
 }
 
-const ASSET_PATH = "../";
+const ASSETS_PATH = "../../assets/";
+const MEDIA_PATH = "../../media/";
 
 const STAGE_WIDTH = 1250;
 const STAGE_HEIGHT = 750;
@@ -177,7 +178,7 @@ function primer(): void {
 function changeSpriteBoy(): void {
   const spriteUrlThis = spriteUrlCounter % 4;
   byId<HTMLImageElement>("spriteBoy").src =
-    ASSET_PATH + "rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
+    ASSETS_PATH + "sprites/rb" + dik + "_sprites/rb" + spriteUrlThis + "_mini.png";
 }
 
 function scrollSpriteBoy(): void {
@@ -190,7 +191,7 @@ function scrollSpriteBoy(): void {
 function changeSpriteEnemy(): void {
   const spriteEnemyUrlThis = spriteEnemyUrlCounter % 4;
   const scrollingEnemy = byId<HTMLImageElement>("spriteEnemy");
-  scrollingEnemy.src = ASSET_PATH + "rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
+  scrollingEnemy.src = ASSETS_PATH + "sprites/rb6_sprites/rb" + spriteEnemyUrlThis + "_mini.png";
   curPosEnemy = parseInt(scrollingEnemy.style.left) + enemyStep;
   scrollingEnemy.style.left = curPosEnemy + "px";
 }
@@ -376,7 +377,7 @@ function hideBGfont(): void {
 }
 
 function setBackground(file: string): void {
-  document.body.style.backgroundImage = "url('" + ASSET_PATH + file + "')";
+  document.body.style.backgroundImage = "url('" + ASSETS_PATH + "images/" + file + "')";
 }
 
 function MenuButtonOn(): void {
@@ -411,13 +412,13 @@ function createClipSound(...sources: string[]): ClipSound {
 }
 
 function soundHoverMenu(): void {
-  window.mouseoversound = createClipSound(ASSET_PATH + "../sounds/button19.wav");
-  window.clicksound = createClipSound(ASSET_PATH + "../sounds/click.ogg");
+  window.mouseoversound = createClipSound(MEDIA_PATH + "sounds/button19.wav");
+  window.clicksound = createClipSound(MEDIA_PATH + "sounds/click.ogg");
 }
 
 function soundHoverMenu1(): void {
-  window.mouseoversound = createClipSound(ASSET_PATH + "../sounds/soundsOff.wav");
-  window.clicksound = createClipSound(ASSET_PATH + "../sounds/soundsOff.wav");
+  window.mouseoversound = createClipSound(MEDIA_PATH + "sounds/soundsOff.wav");
+  window.clicksound = createClipSound(MEDIA_PATH + "sounds/soundsOff.wav");
 }
 
 function playBgMusic(): void {
@@ -426,12 +427,12 @@ function playBgMusic(): void {
   if (myaudio.paused) {
     myaudio.volume = 0.65;
     myaudio.play().catch(showSoundUnlock);
-    buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOn.png')";
+    buttona.style.backgroundImage = "url('" + ASSETS_PATH + "images/bgMusicOn.png')";
     buttona.style.color = "White";
     bgMusicValue = 2;
   } else {
     myaudio.pause();
-    buttona.style.backgroundImage = "url('" + ASSET_PATH + "images/bgMusicOff.png')";
+    buttona.style.backgroundImage = "url('" + ASSETS_PATH + "images/bgMusicOff.png')";
     buttona.style.color = "Black";
     bgMusicValue = 0;
   }
