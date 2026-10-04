@@ -1,5 +1,6 @@
 import type { Actor, RoundSnapshot } from "../models/round";
 import { MENU_BACKGROUND, imageUrl, spriteUrl } from "./assets";
+import type { Birds } from "./birds";
 import { byId } from "./dom";
 
 export interface RoundLook {
@@ -10,6 +11,8 @@ export interface RoundLook {
 
 export class GameView {
   private look: RoundLook | null = null;
+
+  constructor(private readonly birds: Birds) {}
 
   showRound(round: RoundSnapshot, look: RoundLook): void {
     this.look = look;
@@ -75,7 +78,10 @@ export class GameView {
     byId("wrapper_div").style.display = display;
     byId("GameScoreDiv").style.display = display;
     byId("generalMenuDiv").style.display = display;
-    if (!visible) {
+    if (visible) {
+      this.birds.start();
+    } else {
+      this.birds.stop();
       byId("primerText").blur();
     }
   }

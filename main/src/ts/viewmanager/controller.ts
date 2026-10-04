@@ -95,7 +95,7 @@ export class GameController implements UiActions {
   }
 
   backToMenu(): void {
-    this.deps.screens.hide("volume", "settings", "help");
+    this.deps.screens.hide("volume", "settings", "help", "levelIntro");
     this.deps.screens.show("mainMenu");
     this.click();
   }

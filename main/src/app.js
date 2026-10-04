@@ -469,6 +469,94 @@
     }
   };
 
+  // main/src/ts/viewmanager/dom.ts
+  function byId(id, type = HTMLElement) {
+    const element = document.getElementById(id);
+    if (!(element instanceof type)) {
+      throw new Error(`Missing element #${id} of type ${type.name}`);
+    }
+    return element;
+  }
+
+  // main/src/ts/viewmanager/flock.ts
+  var MAX_BIRDS = 10;
+  function between(random, min, max) {
+    return min + random() * (max - min);
+  }
+  function planFlock(random = Math.random) {
+    const count = 1 + Math.min(MAX_BIRDS - 1, Math.floor(random() * MAX_BIRDS));
+    const birds = Array.from({ length: count }, () => ({
+      topPercent: between(random, 4, 40),
+      sizePx: Math.round(between(random, 26, 48)),
+      durationMs: Math.round(between(random, 9e3, 18e3)),
+      delayMs: Math.round(between(random, 0, 4e3)),
+      flapMs: Math.round(between(random, 280, 520))
+    }));
+    return { birds, pauseAfterMs: Math.round(between(random, 1500, 6e3)) };
+  }
+
+  // main/src/ts/viewmanager/birds.ts
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  var WING_PATH = "M0 5 Q9 -2 20 9 Q31 -2 40 5 Q32 7 20 17 Q8 7 0 5Z";
+  var Birds = class {
+    constructor(plan = planFlock) {
+      __publicField(this, "plan", plan);
+      __publicField(this, "sky", byId("birds"));
+      __publicField(this, "flight", 0);
+      __publicField(this, "flying", false);
+      __publicField(this, "nextFlock");
+    }
+    start() {
+      if (this.flying) {
+        return;
+      }
+      this.flying = true;
+      this.flyFlock(++this.flight);
+    }
+    stop() {
+      this.flying = false;
+      this.flight += 1;
+      clearTimeout(this.nextFlock);
+      this.sky.replaceChildren();
+    }
+    flyFlock(flight) {
+      const { birds, pauseAfterMs } = this.plan();
+      let airborne = birds.length;
+      birds.forEach((plan) => {
+        const bird = this.createBird(plan);
+        bird.addEventListener("animationend", (event) => {
+          if (event.target !== bird) {
+            return;
+          }
+          bird.remove();
+          airborne -= 1;
+          if (airborne === 0 && flight === this.flight) {
+            this.nextFlock = setTimeout(() => {
+              this.flyFlock(flight);
+            }, pauseAfterMs);
+          }
+        });
+        this.sky.append(bird);
+      });
+    }
+    createBird(flight) {
+      const bird = document.createElement("div");
+      bird.className = "bird";
+      bird.style.top = `${flight.topPercent}%`;
+      bird.style.width = `${flight.sizePx}px`;
+      bird.style.animationDuration = `${flight.durationMs}ms`;
+      bird.style.animationDelay = `${flight.delayMs}ms`;
+      const svg = document.createElementNS(SVG_NS, "svg");
+      svg.setAttribute("viewBox", "0 0 40 18");
+      svg.style.animationDuration = `${flight.flapMs}ms`;
+      const wings = document.createElementNS(SVG_NS, "path");
+      wings.setAttribute("d", WING_PATH);
+      svg.append(wings);
+      bird.append(svg);
+      return bird;
+    }
+  };
+
   // main/src/ts/viewmanager/controller.ts
   var GameController = class {
     constructor(deps) {
@@ -535,7 +623,7 @@
       this.openFromMenu("help");
     }
     backToMenu() {
-      this.deps.screens.hide("volume", "settings", "help");
+      this.deps.screens.hide("volume", "settings", "help", "levelIntro");
       this.deps.screens.show("mainMenu");
       this.click();
     }
@@ -672,18 +760,10 @@
     return `${ASSETS_PATH}images/${file}`;
   }
 
-  // main/src/ts/viewmanager/dom.ts
-  function byId(id, type = HTMLElement) {
-    const element = document.getElementById(id);
-    if (!(element instanceof type)) {
-      throw new Error(`Missing element #${id} of type ${type.name}`);
-    }
-    return element;
-  }
-
   // main/src/ts/viewmanager/gameView.ts
   var GameView = class {
-    constructor() {
+    constructor(birds) {
+      __publicField(this, "birds", birds);
       __publicField(this, "look", null);
     }
     showRound(round, look) {
@@ -742,7 +822,10 @@
       byId("wrapper_div").style.display = display;
       byId("GameScoreDiv").style.display = display;
       byId("generalMenuDiv").style.display = display;
-      if (!visible) {
+      if (visible) {
+        this.birds.start();
+      } else {
+        this.birds.stop();
         byId("primerText").blur();
       }
     }
@@ -1030,7 +1113,7 @@
       level: FIRST_LEVEL,
       audio,
       screens,
-      gameView: new GameView(),
+      gameView: new GameView(new Birds()),
       menuView: new MenuView()
     });
     bindHandlers(controller);

@@ -9,6 +9,7 @@
     <script src="app.js" defer></script>
   </head>
   <body>
+    <div id="birds" aria-hidden="true"></div>
     <div id="wrapper">
       <div id="generalMenuDiv">
         <div id="generalMenuBtn" data-action="leave-to-menu"></div>
@@ -208,12 +209,20 @@
             there was a big angry dog. Johny can't staying there, he must run!
           </p>
           <p><b>Goal:</b> It is necessary to escape from the evil dog. Help Johny!</p>
-          <input
-            type="button"
-            value="Start"
-            id="level1Popup_startBtn"
-            data-action="start-level"
-          />
+          <div id="level1Popup_actions">
+            <input
+              type="button"
+              value="Start"
+              id="level1Popup_startBtn"
+              data-action="start-level"
+            />
+            <input
+              type="button"
+              value="Cancel"
+              id="level1Popup_cancelBtn"
+              data-action="back-to-menu"
+            />
+          </div>
         </div>
       </div>
     </div>

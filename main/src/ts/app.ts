@@ -5,6 +5,7 @@ import { AudioManager } from "./media/audioManager";
 import { watchPageActivity } from "./media/pageActivity";
 import { MainMenu } from "./menu/mainMenu";
 import { Settings } from "./menu/settings";
+import { Birds } from "./viewmanager/birds";
 import { GameController } from "./viewmanager/controller";
 import { GameView } from "./viewmanager/gameView";
 import { bindHandlers } from "./viewmanager/handlers";
@@ -28,7 +29,7 @@ function main(): void {
     level: FIRST_LEVEL,
     audio,
     screens,
-    gameView: new GameView(),
+    gameView: new GameView(new Birds()),
     menuView: new MenuView(),
   });
   bindHandlers(controller);
