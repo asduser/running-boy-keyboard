@@ -6,7 +6,9 @@ import { byId } from "./dom";
 export class MenuView {
   renderSettings(settings: SettingsState): void {
     const difficulty = DIFFICULTIES[settings.difficulty];
-    byId("gameDiff", HTMLSelectElement).value = difficulty.id;
+    const difficultySelect = byId("gameDiff", HTMLSelectElement);
+    difficultySelect.value = difficulty.id;
+    difficultySelect.dataset.difficulty = difficulty.id;
     byId("optionValueSpeed").textContent = difficulty.typingSpeed;
     byId("optionValueError").textContent = difficulty.errorImpact;
     byId("optionValueTime").textContent = difficulty.totalTime;

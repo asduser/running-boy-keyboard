@@ -697,6 +697,7 @@
       this.moveHero(round.hero);
       this.moveEnemy(round.enemy);
       this.setStageVisible(true);
+      input.focus({ preventScroll: true });
     }
     renderTyping(round) {
       const text = byId("textField");
@@ -741,6 +742,9 @@
       byId("wrapper_div").style.display = display;
       byId("GameScoreDiv").style.display = display;
       byId("generalMenuDiv").style.display = display;
+      if (!visible) {
+        byId("primerText").blur();
+      }
     }
   };
 
@@ -922,7 +926,9 @@
   var MenuView = class {
     renderSettings(settings) {
       const difficulty = DIFFICULTIES[settings.difficulty];
-      byId("gameDiff", HTMLSelectElement).value = difficulty.id;
+      const difficultySelect = byId("gameDiff", HTMLSelectElement);
+      difficultySelect.value = difficulty.id;
+      difficultySelect.dataset.difficulty = difficulty.id;
       byId("optionValueSpeed").textContent = difficulty.typingSpeed;
       byId("optionValueError").textContent = difficulty.errorImpact;
       byId("optionValueTime").textContent = difficulty.totalTime;

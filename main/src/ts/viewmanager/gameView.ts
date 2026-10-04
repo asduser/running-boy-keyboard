@@ -22,6 +22,7 @@ export class GameView {
     this.moveHero(round.hero);
     this.moveEnemy(round.enemy);
     this.setStageVisible(true);
+    input.focus({ preventScroll: true });
   }
 
   renderTyping(round: RoundSnapshot): void {
@@ -74,5 +75,8 @@ export class GameView {
     byId("wrapper_div").style.display = display;
     byId("GameScoreDiv").style.display = display;
     byId("generalMenuDiv").style.display = display;
+    if (!visible) {
+      byId("primerText").blur();
+    }
   }
 }

@@ -30,3 +30,13 @@ body{overflow:hidden;background:#148edb no-repeat center bottom}
 #mybtnBg.off{background-image:url(../../assets/images/bgMusicOff.png);color:#000}
 #musicInGameOn,#musicInGameOff{color:#fff}
 #VolumeBtOn.selected,#VolumeBtOff.selected,#VolumeDogOn.selected,#VolumeDogOff.selected,#musicInGameOn.selected,#musicInGameOff.selected{color:#008800}
+#option_info select[name=gameDiff]{-webkit-appearance:none;-moz-appearance:none;appearance:none;display:block;width:14em;height:2.4em;margin:10px auto 6px;padding:0 36px 0 14px;background:#2F6184 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;color:#fff;font:700 16px Georgia;border:2px solid #fff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.25);outline:none;transition:background-color .3s,border-color .3s;cursor:url(../../assets/icons/cursorBoyGreen.png) 0 0,pointer}
+#option_info select[name=gameDiff]:hover,#option_info select[name=gameDiff]:focus{border-color:#ddd;filter:brightness(1.1)}
+#option_info select[data-difficulty=easy]{background-color:#080}
+#option_info select[data-difficulty=medium]{background-color:#E07B00}
+#option_info select[data-difficulty=hard]{background-color:#C00}
+#option_info select[name=gameDiff] option[value=easy]{color:#080}
+#option_info select[name=gameDiff] option[value=medium]{color:#E07B00}
+#option_info select[name=gameDiff] option[value=hard]{color:#C00}
+#option_info select[name=gameDiff] option{background:#fff;color:#2F6184;font:700 16px Georgia}
+.help_back:hover{cursor:url(../../assets/icons/cursorBoyGreen.png) 0 0,pointer}
