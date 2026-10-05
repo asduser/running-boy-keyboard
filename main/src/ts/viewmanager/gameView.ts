@@ -1,18 +1,24 @@
 import type { Actor, RoundSnapshot } from "../models/round";
+import type { Weather } from "../models/weather";
 import { MENU_BACKGROUND, imageUrl, spriteUrl } from "./assets";
 import type { Birds } from "./birds";
 import { byId } from "./dom";
+import type { WeatherView } from "./weatherView";
 
 export interface RoundLook {
   readonly heroSprites: string;
   readonly enemySprites: string;
   readonly background: string;
+  readonly weather?: Weather;
 }
 
 export class GameView {
   private look: RoundLook | null = null;
 
-  constructor(private readonly birds: Birds) {}
+  constructor(
+    private readonly birds: Birds,
+    private readonly weather: WeatherView,
+  ) {}
 
   showRound(round: RoundSnapshot, look: RoundLook): void {
     this.look = look;
@@ -25,6 +31,7 @@ export class GameView {
     this.moveHero(round.hero);
     this.moveEnemy(round.enemy);
     this.setStageVisible(true);
+    this.weather.start(look.weather);
     input.focus({ preventScroll: true });
   }
 
@@ -82,6 +89,7 @@ export class GameView {
       this.birds.start();
     } else {
       this.birds.stop();
+      this.weather.stop();
       byId("primerText").blur();
     }
   }

@@ -225,8 +225,8 @@
   function sum(values) {
     return values.reduce((total, value) => total + value, 0);
   }
-  function extreme(values, pick) {
-    return values.length ? pick(...values) : 0;
+  function extreme(values, pick2) {
+    return values.length ? pick2(...values) : 0;
   }
 
   // main/src/ts/models/enemy.ts
@@ -251,7 +251,14 @@
       "fdofdkl fdhjreyux fdyudywer fuidfuid fpi f",
       "mcrsft ppl ggl andrd s wndws phn lg smsng"
     ],
-    enemy: DOG
+    enemy: DOG,
+    weather: {
+      calmMs: { min: 2e3, max: 8e3 },
+      stormMs: { min: 1e4, max: 25e3 },
+      drops: { min: 70, max: 160 },
+      windDeg: { min: 6, max: 20 },
+      lightningStrikes: { min: 1, max: 4 }
+    }
   };
 
   // main/src/ts/levels/index.ts
@@ -567,7 +574,8 @@
         deps.gameView.showRound(round, {
           heroSprites: HEROES[this.settings.hero].spriteFolder,
           enemySprites: level.enemy.spriteFolder,
-          background: level.background
+          background: level.background,
+          weather: level.weather
         });
       });
       game.on("typed", ({ round }) => {
@@ -762,8 +770,9 @@
 
   // main/src/ts/viewmanager/gameView.ts
   var GameView = class {
-    constructor(birds) {
+    constructor(birds, weather) {
       __publicField(this, "birds", birds);
+      __publicField(this, "weather", weather);
       __publicField(this, "look", null);
     }
     showRound(round, look) {
@@ -777,6 +786,7 @@
       this.moveHero(round.hero);
       this.moveEnemy(round.enemy);
       this.setStageVisible(true);
+      this.weather.start(look.weather);
       input.focus({ preventScroll: true });
     }
     renderTyping(round) {
@@ -826,6 +836,7 @@
         this.birds.start();
       } else {
         this.birds.stop();
+        this.weather.stop();
         byId("primerText").blur();
       }
     }
@@ -1096,6 +1107,106 @@
     }
   };
 
+  // main/src/ts/levels/storm.ts
+  function pick(random, { min, max }) {
+    return Math.round(min + random() * (max - min));
+  }
+  function planStorm(weather, random = Math.random) {
+    const calmMs = pick(random, weather.calmMs);
+    const stormMs = pick(random, weather.stormMs);
+    const drops = pick(random, weather.drops);
+    const windDeg = pick(random, weather.windDeg);
+    const strikes = pick(random, weather.lightningStrikes);
+    const lightningAtMs = Array.from(
+      { length: strikes },
+      () => pick(random, { min: 0, max: stormMs })
+    ).sort((a, b) => a - b);
+    return { calmMs, stormMs, drops, windDeg, lightningAtMs };
+  }
+
+  // main/src/ts/viewmanager/weatherView.ts
+  var FADE_MS = 2e3;
+  var WeatherView = class {
+    constructor(plan = planStorm) {
+      __publicField(this, "plan", plan);
+      __publicField(this, "sky", byId("weather"));
+      __publicField(this, "rain", byId("weatherRain"));
+      __publicField(this, "flash", byId("weatherFlash"));
+      __publicField(this, "weather", null);
+      __publicField(this, "timers", []);
+    }
+    start(weather) {
+      if (weather === this.weather) {
+        return;
+      }
+      this.stop();
+      if (!weather) {
+        return;
+      }
+      this.weather = weather;
+      this.storm(weather, this.plan(weather), true);
+    }
+    stop() {
+      this.weather = null;
+      this.timers.forEach((timer) => {
+        clearTimeout(timer);
+      });
+      this.timers = [];
+      this.sky.classList.remove("storm");
+      this.flash.classList.remove("strike");
+      this.rain.replaceChildren();
+    }
+    cycle(weather) {
+      const storm = this.plan(weather);
+      this.later(storm.calmMs, () => {
+        this.storm(weather, storm, false);
+      });
+    }
+    storm(weather, storm, instant) {
+      this.beginStorm(storm, instant);
+      storm.lightningAtMs.forEach((at) => {
+        this.later(at, () => {
+          this.strike();
+        });
+      });
+      this.later(storm.stormMs, () => {
+        this.sky.classList.remove("storm");
+        this.later(FADE_MS, () => {
+          this.rain.replaceChildren();
+          this.cycle(weather);
+        });
+      });
+    }
+    beginStorm(storm, instant) {
+      this.rain.style.transform = `rotate(${storm.windDeg}deg)`;
+      this.rain.replaceChildren(
+        ...Array.from({ length: storm.drops }, () => {
+          const drop = document.createElement("i");
+          drop.style.left = `${(Math.random() * 130 - 15).toFixed(2)}%`;
+          drop.style.height = `${Math.round(40 + Math.random() * 50)}px`;
+          drop.style.opacity = (0.25 + Math.random() * 0.45).toFixed(2);
+          drop.style.animationDuration = `${Math.round(450 + Math.random() * 400)}ms`;
+          drop.style.animationDelay = `-${Math.round(Math.random() * 1e3)}ms`;
+          return drop;
+        })
+      );
+      this.sky.classList.toggle("instant", instant);
+      this.sky.classList.add("storm");
+      if (instant) {
+        this.sky.getBoundingClientRect();
+        this.sky.classList.remove("instant");
+      }
+    }
+    strike() {
+      this.flash.classList.remove("strike");
+      this.flash.getBoundingClientRect();
+      this.flash.classList.add("strike");
+    }
+    later(ms, task) {
+      this.timers.push(setTimeout(task, ms));
+    }
+  };
+
   // main/src/ts/app.ts
   function main() {
     const layout = new Layout();
@@ -1113,7 +1224,7 @@
       level: FIRST_LEVEL,
       audio,
       screens,
-      gameView: new GameView(new Birds()),
+      gameView: new GameView(new Birds(), new WeatherView()),
       menuView: new MenuView()
     });
     bindHandlers(controller);

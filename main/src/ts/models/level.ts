@@ -1,4 +1,5 @@
 import type { Enemy } from "./enemy";
+import type { Weather } from "./weather";
 
 export interface Level {
   readonly number: number;
@@ -6,4 +7,5 @@ export interface Level {
   readonly background: string;
   readonly texts: readonly string[];
   readonly enemy: Enemy;
+  readonly weather?: Weather;
 }

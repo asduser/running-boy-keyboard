@@ -14,4 +14,11 @@ export const ABANDONED_AREA: Level = {
     "mcrsft ppl ggl andrd s wndws phn lg smsng",
   ],
   enemy: DOG,
+  weather: {
+    calmMs: { min: 2_000, max: 8_000 },
+    stormMs: { min: 10_000, max: 25_000 },
+    drops: { min: 70, max: 160 },
+    windDeg: { min: 6, max: 20 },
+    lightningStrikes: { min: 1, max: 4 },
+  },
 };

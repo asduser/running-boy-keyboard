@@ -33,6 +33,7 @@ export class GameController implements UiActions {
         heroSprites: HEROES[this.settings.hero].spriteFolder,
         enemySprites: level.enemy.spriteFolder,
         background: level.background,
+        weather: level.weather,
       });
     });
     game.on("typed", ({ round }) => {

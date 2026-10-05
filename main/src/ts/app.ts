@@ -12,6 +12,7 @@ import { bindHandlers } from "./viewmanager/handlers";
 import { Layout } from "./viewmanager/layout";
 import { MenuView } from "./viewmanager/menuView";
 import { Screens } from "./viewmanager/screens";
+import { WeatherView } from "./viewmanager/weatherView";
 
 function main(): void {
   const layout = new Layout();
@@ -29,7 +30,7 @@ function main(): void {
     level: FIRST_LEVEL,
     audio,
     screens,
-    gameView: new GameView(new Birds()),
+    gameView: new GameView(new Birds(), new WeatherView()),
     menuView: new MenuView(),
   });
   bindHandlers(controller);

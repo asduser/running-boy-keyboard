@@ -50,3 +50,13 @@ body{overflow:hidden;background:#148edb no-repeat center bottom}
 #level1Popup_cancelBtn{background:#2F6184;color:#fff;padding:6px 9px;font:700 17px Georgia}
 #level1Popup_cancelBtn:hover{background:#900}
 #level1Popup_startBtn:hover,#level1Popup_cancelBtn:hover{cursor:url(../../assets/icons/cursorBoyGreen.png) 0 0,pointer}
+#weather{position:fixed;top:0;right:0;bottom:0;left:0;z-index:0;overflow:hidden;pointer-events:none;background:rgba(8,18,38,0);transition:background-color 2s ease}
+#weather.storm{background:rgba(8,18,38,.45)}
+#weatherRain{position:absolute;top:-20%;left:-20%;width:140%;height:140%;opacity:0;transition:opacity 2s ease}
+#weather.storm #weatherRain{opacity:1}
+#weatherRain i{position:absolute;top:-100px;width:2px;border-radius:1px;background:linear-gradient(to bottom,rgba(210,230,255,0),rgba(210,230,255,.9));animation:rain-fall linear infinite}
+@keyframes rain-fall{0%{transform:translateY(0)}100%{transform:translateY(calc(140vh + 120px))}}
+#weatherFlash{position:absolute;top:0;right:0;bottom:0;left:0;background:#EAF4FF;opacity:0}
+#weatherFlash.strike{animation:lightning 900ms ease-out}
+@keyframes lightning{0%{opacity:0}6%{opacity:.85}12%{opacity:.1}20%{opacity:.7}35%{opacity:0}100%{opacity:0}}
+#weather.instant,#weather.instant #weatherRain{transition:none}
