@@ -22,6 +22,7 @@ function main(): void {
       screens.show("soundUnlock");
     },
   });
+  
   const controller = new GameController({
     game: new Game(),
     stats: new SessionStats(),
