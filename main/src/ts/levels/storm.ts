@@ -23,5 +23,6 @@ export function planStorm(weather: Weather, random: Random = Math.random): Storm
   const lightningAtMs = Array.from({ length: strikes }, () =>
     pick(random, { min: 0, max: stormMs }),
   ).sort((a, b) => a - b);
+  
   return { calmMs, stormMs, drops, windDeg, lightningAtMs };
 }
