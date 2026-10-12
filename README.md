@@ -10,4 +10,4 @@
 
 1. Select difficulty level, game character, etc. and press "start".
 2. You must write correctly symbols which are displaying above the input field. Be careful, wrong symbols increase speed of enemy and decrease your total score.
-3. Also implemented very easy system of statistics.
+3. Also implemented system of statistics.
