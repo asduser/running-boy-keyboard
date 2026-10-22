@@ -8,6 +8,6 @@
 
 <b>Rules:</b>
 
-1. Select difficulty level, game character, etc. and press "start".
+1. Select difficulty level, game character, etc. and press "start". By default the "Hard" level is set.
 2. You must write correctly symbols which are displaying above the input field. Be careful, wrong symbols increase speed of enemy and decrease your total score.
 3. Also implemented system of statistics.
