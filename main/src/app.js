@@ -427,7 +427,7 @@
       catchDistance: 90
     }
   };
-  var DEFAULT_DIFFICULTY = "hard";
+  var DEFAULT_DIFFICULTY = "easy";
   function isDifficultyId(value) {
     return value in DIFFICULTIES;
   }

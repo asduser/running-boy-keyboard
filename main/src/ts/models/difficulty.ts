@@ -44,7 +44,7 @@ export const DIFFICULTIES: Readonly<Record<DifficultyId, Difficulty>> = {
   },
 };
 
-export const DEFAULT_DIFFICULTY: DifficultyId = "hard";
+export const DEFAULT_DIFFICULTY: DifficultyId = "easy";
 
 export function isDifficultyId(value: string): value is DifficultyId {
   return value in DIFFICULTIES;
