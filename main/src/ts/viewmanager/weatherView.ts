@@ -18,6 +18,7 @@ export class WeatherView {
       return;
     }
     this.stop();
+    this.sky.classList.add("sunny");
     if (!weather) {
       return;
     }
@@ -31,7 +32,7 @@ export class WeatherView {
       clearTimeout(timer);
     });
     this.timers = [];
-    this.sky.classList.remove("storm");
+    this.sky.classList.remove("sunny", "storm");
     this.flash.classList.remove("strike");
     this.rain.replaceChildren();
   }
