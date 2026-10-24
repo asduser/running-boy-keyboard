@@ -174,6 +174,7 @@ export class GameController implements UiActions {
 
   type(input: string): void {
     this.deps.game.type(input);
+    this.deps.gameView.syncInput();
   }
 
   hover(): void {

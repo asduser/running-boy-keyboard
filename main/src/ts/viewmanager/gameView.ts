@@ -14,6 +14,7 @@ export interface RoundLook {
 
 export class GameView {
   private look: RoundLook | null = null;
+  private typedText = "";
 
   constructor(
     private readonly birds: Birds,
@@ -42,12 +43,24 @@ export class GameView {
         const span = document.createElement("span");
         span.textContent = state.char;
         span.classList.toggle("char-typed", state.typed);
-        span.classList.toggle("char-mistyped", state.mistyped);
+        span.classList.toggle("char-mistyped", state.mistyped && !state.typed);
         return span;
       }),
     );
     byId("progressBar", HTMLProgressElement).value = round.progress;
     byId("divScoreVal").textContent = String(round.score);
+    this.typedText = round.chars
+      .slice(0, round.progress)
+      .map((state) => state.char)
+      .join("");
+    this.syncInput();
+  }
+
+  syncInput(): void {
+    const input = byId("primerText", HTMLInputElement);
+    if (input.value !== this.typedText) {
+      input.value = this.typedText;
+    }
   }
 
   moveHero(hero: Actor): void {

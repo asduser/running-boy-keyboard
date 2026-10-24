@@ -944,14 +944,33 @@ body {
   left: 100%;
   animation: bird-fly linear both;
 }
+#birds .bird .bird-shape,
+#birds .bird .bat-shape {
+  transition: opacity 2s ease;
+}
+#birds .bird .bat-shape,
+body:has(#weather.storm) #birds .bird .bird-shape {
+  opacity: 0;
+}
+body:has(#weather.storm) #birds .bird .bat-shape {
+  opacity: 1;
+}
 #birds .bird svg {
   display: block;
   width: 100%;
   height: auto;
   fill: #14283c;
   filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.75));
-  transform-origin: 50% 55%;
-  animation: bird-flap ease-in-out infinite alternate;
+}
+#birds .bird .bat-shape {
+  transform-box: view-box;
+  transform-origin: 20px 9.9px;
+  animation: bird-flap var(--flap) ease-in-out infinite alternate;
+}
+#birds .bird .bird-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: wing-flap var(--flap) ease-in-out infinite alternate;
 }
 @keyframes bird-fly {
   0% {
@@ -976,6 +995,14 @@ body {
   }
   100% {
     transform: scaleY(-0.25);
+  }
+}
+@keyframes wing-flap {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(-0.9);
   }
 }
 #level1Popup_actions {
@@ -1004,6 +1031,7 @@ body {
     pointer;
 }
 #weather {
+  --sun: clamp(28px, 5.5vmin, 60px);
   position: fixed;
   top: 0;
   right: 0;
@@ -1083,7 +1111,6 @@ body {
   }
 }
 #weatherSun {
-  --sun: clamp(28px, 5.5vmin, 60px);
   position: absolute;
   top: calc(var(--sun) * 0.75);
   right: calc(var(--sun) * 0.6);
@@ -1173,8 +1200,63 @@ body {
     opacity: 1;
   }
 }
+#weatherMoon {
+  position: absolute;
+  top: calc(var(--sun) * 0.75);
+  left: calc(var(--sun) * 0.6);
+  width: var(--sun);
+  height: var(--sun);
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse 24% 19% at 34% 36%,
+      rgba(128, 134, 142, 0.42),
+      rgba(128, 134, 142, 0)
+    ),
+    radial-gradient(
+      ellipse 15% 20% at 62% 30%,
+      rgba(128, 134, 142, 0.34),
+      rgba(128, 134, 142, 0)
+    ),
+    radial-gradient(
+      ellipse 28% 17% at 56% 62%,
+      rgba(128, 134, 142, 0.36),
+      rgba(128, 134, 142, 0)
+    ),
+    radial-gradient(
+      ellipse 12% 14% at 30% 68%,
+      rgba(128, 134, 142, 0.3),
+      rgba(128, 134, 142, 0)
+    ),
+    radial-gradient(
+      circle at 70% 76%,
+      rgba(255, 255, 250, 0.6) 0 3%,
+      rgba(255, 255, 250, 0) 9%
+    ),
+    radial-gradient(
+      circle at 38% 36%,
+      #fbfbf4 0,
+      #e9eae2 45%,
+      #cfd2cc 78%,
+      #b5b9b6 100%
+    );
+  box-shadow:
+    inset calc(var(--sun) * -0.08) calc(var(--sun) * -0.06)
+      calc(var(--sun) * 0.15) rgba(40, 50, 70, 0.45),
+    0 0 calc(var(--sun) * 0.25) rgba(220, 230, 255, 0.55),
+    0 0 calc(var(--sun) * 0.8) rgba(190, 210, 255, 0.25);
+  opacity: 0;
+}
+#weather.sunny.storm #weatherMoon {
+  opacity: 0.95;
+  transition: opacity 2s ease;
+}
+#weather.sunny #weatherMoon {
+  transition: opacity 2s ease;
+}
 #weather.instant,
 #weather.instant #weatherRain,
-#weather.instant.sunny #weatherSun {
+#weather.instant.sunny #weatherSun,
+#weather.instant.sunny #weatherMoon {
   transition: none;
 }

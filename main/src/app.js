@@ -504,7 +504,9 @@
 
   // main/src/ts/viewmanager/birds.ts
   var SVG_NS = "http://www.w3.org/2000/svg";
-  var WING_PATH = "M0 5 Q9 -2 20 9 Q31 -2 40 5 Q32 7 20 17 Q8 7 0 5Z";
+  var BAT_PATH = "M0 5 Q9 -2 20 9 Q31 -2 40 5 Q32 7 20 17 Q8 7 0 5Z";
+  var BIRD_BODY_PATH = "M1.5 8.6 L4 7.7 Q5.5 5.8 7.6 6.6 Q9 7.2 10 7.6 Q18 7.4 26 8.4 L36 6 L31 9.2 L36 12.4 L25.5 10.4 Q17 11.6 10 10.2 Q7 10.4 5.2 9.8 Q4 9.4 3.8 9.2 Z";
+  var BIRD_WING_PATH = "M11 8 Q14 1 27 0 Q21 3.5 19.5 8 Z";
   var Birds = class {
     constructor(plan = planFlock) {
       __publicField(this, "plan", plan);
@@ -553,16 +555,25 @@
       bird.style.width = `${flight.sizePx}px`;
       bird.style.animationDuration = `${flight.durationMs}ms`;
       bird.style.animationDelay = `${flight.delayMs}ms`;
-      const svg = document.createElementNS(SVG_NS, "svg");
-      svg.setAttribute("viewBox", "0 0 40 18");
-      svg.style.animationDuration = `${flight.flapMs}ms`;
-      const wings = document.createElementNS(SVG_NS, "path");
-      wings.setAttribute("d", WING_PATH);
-      svg.append(wings);
+      const svg = svgElement("svg", { viewBox: "0 0 40 18" });
+      svg.style.setProperty("--flap", `${flight.flapMs}ms`);
+      const songbird = svgElement("g", { class: "bird-shape" });
+      songbird.append(
+        svgElement("path", { d: BIRD_BODY_PATH }),
+        svgElement("path", { class: "bird-wing", d: BIRD_WING_PATH })
+      );
+      svg.append(songbird, svgElement("path", { class: "bat-shape", d: BAT_PATH }));
       bird.append(svg);
       return bird;
     }
   };
+  function svgElement(name, attributes) {
+    const element = document.createElementNS(SVG_NS, name);
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+    return element;
+  }
 
   // main/src/ts/viewmanager/controller.ts
   var GameController = class {
@@ -694,6 +705,7 @@
     }
     type(input) {
       this.deps.game.type(input);
+      this.deps.gameView.syncInput();
     }
     hover() {
       if (this.settings.menuSounds) {
@@ -774,6 +786,7 @@
       __publicField(this, "birds", birds);
       __publicField(this, "weather", weather);
       __publicField(this, "look", null);
+      __publicField(this, "typedText", "");
     }
     showRound(round, look) {
       this.look = look;
@@ -796,12 +809,20 @@
           const span = document.createElement("span");
           span.textContent = state.char;
           span.classList.toggle("char-typed", state.typed);
-          span.classList.toggle("char-mistyped", state.mistyped);
+          span.classList.toggle("char-mistyped", state.mistyped && !state.typed);
           return span;
         })
       );
       byId("progressBar", HTMLProgressElement).value = round.progress;
       byId("divScoreVal").textContent = String(round.score);
+      this.typedText = round.chars.slice(0, round.progress).map((state) => state.char).join("");
+      this.syncInput();
+    }
+    syncInput() {
+      const input = byId("primerText", HTMLInputElement);
+      if (input.value !== this.typedText) {
+        input.value = this.typedText;
+      }
     }
     moveHero(hero) {
       if (this.look) {
