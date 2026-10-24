@@ -402,7 +402,7 @@ body {
   left: 0;
 }
 #help {
-  background: #85c3f1;
+  background: #fff;
   width: 350px;
   margin: 5% auto;
   padding: 5px 5px 13px;
@@ -420,13 +420,14 @@ body {
   color: #333;
 }
 #help_info {
-  font: italic 21px Georgia;
-  color: #333;
+  font: italic 14px Georgia;
+  color: #777;
   margin: 17px 4px 0 7px;
   height: 370px;
   overflow-y: scroll;
 }
 #help_info b {
+  font: 700 13px Tahoma;
   color: #ff4500;
 }
 #help_infoBoy {
@@ -663,12 +664,17 @@ body {
 }
 #level1Popup h1 {
   font: 36px titleLevel;
-  margin: 18px 0 0 52px;
+  margin: 18px 0 0;
+  text-align: center;
   color: #1e4c8f;
+}
+#level1Popup .hr3 {
+  margin: 18px auto 0;
 }
 #level1Popup h2 {
   font: 700 12px Georgia;
-  margin: 0 0 0 188px;
+  margin: 0;
+  text-align: center;
   color: #666;
 }
 #level1Popup_info {
