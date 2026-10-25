@@ -1,5 +1,5 @@
 import type { Weather } from "../../models/weather";
-import { ABANDONED_AREA } from "./abandonedArea";
+import { ABANDONED_AREA } from "./level";
 import { planStorm } from "./storm";
 
 const WEATHER: Weather = {

@@ -1,4 +1,4 @@
-import { type StormPlan, planStorm } from "../levels/adandoned/storm";
+import { type StormPlan, planStorm } from "../levels/abandoned/storm";
 import type { Snowfall, Weather } from "../models/weather";
 import { byId } from "./dom";
 

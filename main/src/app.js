@@ -238,9 +238,9 @@
     barkSteps: [20, 22, 80, 82, 200, 202]
   };
 
-  // main/src/ts/levels/adandoned/abandonedArea.ts
+  // main/src/ts/levels/abandoned/level.ts
   var ABANDONED_AREA = {
-    number: 1,
+    number: 2,
     title: "Abandoned area",
     background: "bg_font_mini.jpg",
     texts: [
@@ -364,7 +364,7 @@ ${behind}`
 
   // main/src/ts/levels/snowman/level.ts
   var SNOW_LEVEL = {
-    number: 2,
+    number: 1,
     title: "Snowman",
     background: snowScene,
     texts: ABANDONED_AREA.texts,
@@ -1019,7 +1019,7 @@ ${behind}`
       "choose-level": () => {
         actions.chooseLevel();
       },
-      "mock-level": () => {
+      "snowman-level": () => {
         actions.mockLevel();
       },
       "menu-back": () => {
@@ -1349,7 +1349,7 @@ ${behind}`
     update();
   }
 
-  // main/src/ts/levels/adandoned/storm.ts
+  // main/src/ts/levels/abandoned/storm.ts
   function pick(random, { min, max }) {
     return Math.round(min + random() * (max - min));
   }

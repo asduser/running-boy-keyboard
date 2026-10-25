@@ -38,7 +38,7 @@ export function bindHandlers(actions: UiActions): void {
     "choose-level": () => {
       actions.chooseLevel();
     },
-    "mock-level": () => {
+    "snowman-level": () => {
       actions.mockLevel();
     },
     "menu-back": () => {
