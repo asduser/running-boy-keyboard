@@ -1,3 +1,5 @@
+import type { Scenery } from "../../models/level";
+
 type Random = () => number;
 
 export interface SnowmanPlan {
@@ -7,6 +9,7 @@ export interface SnowmanPlan {
   readonly flip: boolean;
   readonly scarf: string;
   readonly hat: boolean;
+  readonly front: boolean;
 }
 
 const WIDTH = 1500;
@@ -42,19 +45,26 @@ function between(random: Random, min: number, max: number): number {
 export function planSnowmen(random: Random = Math.random): SnowmanPlan[] {
   const near = Math.round(between(random, 3, 5));
   const far = Math.round(between(random, 1, 3));
-  const place = (count: number, baseY: [number, number], scale: [number, number]): SnowmanPlan[] =>
+  const place = (count: number, nearby: boolean): SnowmanPlan[] =>
     Array.from({ length: count }, (_, slot) => {
       const slotWidth = WIDTH / count;
+      const front = nearby && random() < 0.5;
+      const [baseY, scale] = !nearby
+        ? [between(random, 664, 674), between(random, 0.35, 0.5)]
+        : front
+          ? [between(random, 714, 726), between(random, 0.85, 1.1)]
+          : [between(random, 674, 680), between(random, 0.7, 0.9)];
       return {
         x: Math.round(slot * slotWidth + between(random, 0.2, 0.8) * slotWidth),
-        baseY: Math.round(between(random, ...baseY)),
-        scale: Number(between(random, ...scale).toFixed(2)),
+        baseY: Math.round(baseY),
+        scale: Number(scale.toFixed(2)),
         flip: random() < 0.5,
         scarf: SCARF_COLORS[Math.floor(random() * SCARF_COLORS.length)] ?? "#d62828",
         hat: random() < 0.6,
+        front,
       };
     });
-  return [...place(far, [664, 674], [0.35, 0.5]), ...place(near, [694, 704], [0.75, 1.05])];
+  return [...place(far, false), ...place(near, true)];
 }
 
 function snowman({ x, baseY, scale, flip, scarf, hat }: SnowmanPlan): string {
@@ -83,21 +93,30 @@ function pine(x: number, baseY: number, scale: number): string {
 </g>`;
 }
 
-export function snowScene(random: Random = Math.random): string {
-  const snowmen = planSnowmen(random).map(snowman).join("");
-  const pines = PINES.map(([x, y, scale]) => pine(x, y, scale)).join("");
+function svg(defs: string, body: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${String(WIDTH)}" height="${String(HEIGHT)}" viewBox="0 0 ${String(WIDTH)} ${String(HEIGHT)}">
 <defs>
-<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb0e8"/><stop offset=".55" stop-color="#a9d6f3"/><stop offset=".85" stop-color="#e3f2fb"/></linearGradient>
+<radialGradient id="ball" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef4fa"/><stop offset="1" stop-color="#c2d4e6"/></radialGradient>
+${defs}
+</defs>
+${body}
+</svg>`;
+}
+
+export function snowScene(random: Random = Math.random): Scenery {
+  const snowmen = planSnowmen(random);
+  const behind = snowmen.filter(({ front }) => !front).map(snowman).join("");
+  const before = snowmen.filter(({ front }) => front).map(snowman).join("");
+  const pines = PINES.map(([x, y, scale]) => pine(x, y, scale)).join("");
+  const background = svg(
+    `<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb0e8"/><stop offset=".55" stop-color="#a9d6f3"/><stop offset=".85" stop-color="#e3f2fb"/></linearGradient>
 <linearGradient id="far" x1="0" y1="0" x2="0" y2="1"><stop offset=".3" stop-color="#9db7d1"/><stop offset="1" stop-color="#d4e4f1"/></linearGradient>
 <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#6f8fb0"/><stop offset="1" stop-color="#a9c1d8"/></linearGradient>
 <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfdff"/><stop offset="1" stop-color="#dbe8f3"/></linearGradient>
 <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#e8f1f8"/><stop offset="1" stop-color="#c3d7e8"/></linearGradient>
-<radialGradient id="ball" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef4fa"/><stop offset="1" stop-color="#c2d4e6"/></radialGradient>
 <clipPath id="farClip"><path d="${FAR_RANGE}"/></clipPath>
-<clipPath id="midClip"><path d="${MID_RANGE}"/></clipPath>
-</defs>
-<rect width="${String(WIDTH)}" height="${String(HEIGHT)}" fill="url(#sky)"/>
+<clipPath id="midClip"><path d="${MID_RANGE}"/></clipPath>`,
+    `<rect width="${String(WIDTH)}" height="${String(HEIGHT)}" fill="url(#sky)"/>
 <path d="${FAR_RANGE}" fill="url(#far)"/>
 <path d="${FAR_SNOWLINE}" fill="#f7fbfe" clip-path="url(#farClip)"/>
 <path d="${MID_RANGE}" fill="url(#mid)"/>
@@ -106,6 +125,7 @@ export function snowScene(random: Random = Math.random): string {
 ${pines}
 <path d="${GROUND}" fill="url(#ground)"/>
 <path d="M0 ${String(GROUND_Y + 2)} H${String(WIDTH)}" stroke="#ffffff" stroke-width="3" opacity=".8"/>
-${snowmen}
-</svg>`;
+${behind}`,
+  );
+  return { background, foreground: svg("", before) };
 }

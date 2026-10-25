@@ -38,6 +38,7 @@ export class GameController implements UiActions {
         enemySprites: level.enemy.spriteFolder,
         background: level.background,
         birds: level.birds,
+        textColor: level.textColor,
         weather: level.weather,
         snowfall: level.snowfall,
       });

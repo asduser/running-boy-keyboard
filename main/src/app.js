@@ -238,7 +238,7 @@
     barkSteps: [20, 22, 80, 82, 200, 202]
   };
 
-  // main/src/ts/levels/abandonedArea.ts
+  // main/src/ts/levels/adandoned/abandonedArea.ts
   var ABANDONED_AREA = {
     number: 1,
     title: "Abandoned area",
@@ -262,7 +262,7 @@
     }
   };
 
-  // main/src/ts/levels/snowScene.ts
+  // main/src/ts/levels/snowman/snowScene.ts
   var WIDTH = 1500;
   var HEIGHT = 750;
   var GROUND_Y = 688;
@@ -288,18 +288,21 @@
   function planSnowmen(random = Math.random) {
     const near = Math.round(between(random, 3, 5));
     const far = Math.round(between(random, 1, 3));
-    const place = (count, baseY, scale) => Array.from({ length: count }, (_, slot) => {
+    const place = (count, nearby) => Array.from({ length: count }, (_, slot) => {
       const slotWidth = WIDTH / count;
+      const front = nearby && random() < 0.5;
+      const [baseY, scale] = !nearby ? [between(random, 664, 674), between(random, 0.35, 0.5)] : front ? [between(random, 714, 726), between(random, 0.85, 1.1)] : [between(random, 674, 680), between(random, 0.7, 0.9)];
       return {
         x: Math.round(slot * slotWidth + between(random, 0.2, 0.8) * slotWidth),
-        baseY: Math.round(between(random, ...baseY)),
-        scale: Number(between(random, ...scale).toFixed(2)),
+        baseY: Math.round(baseY),
+        scale: Number(scale.toFixed(2)),
         flip: random() < 0.5,
         scarf: SCARF_COLORS[Math.floor(random() * SCARF_COLORS.length)] ?? "#d62828",
-        hat: random() < 0.6
+        hat: random() < 0.6,
+        front
       };
     });
-    return [...place(far, [664, 674], [0.35, 0.5]), ...place(near, [694, 704], [0.75, 1.05])];
+    return [...place(far, false), ...place(near, true)];
   }
   function snowman({ x, baseY, scale, flip, scarf, hat }) {
     const hatShape = hat ? '<rect x="-11" y="-118" width="22" height="18" rx="2" fill="#222"/><rect x="-11" y="-106" width="22" height="4" fill="#b22"/><rect x="-16" y="-102" width="32" height="4" rx="2" fill="#222"/>' : "";
@@ -323,21 +326,29 @@ ${hatShape}
 <path d="M0 -70 L-8 -55 L-2 -57 L0 -52 L3 -57 L8 -55Z M-14 -38 L-6 -42 L0 -38 L6 -42 L14 -38 L8 -40 L0 -46 L-8 -40Z" fill="#f4f9fd"/>
 </g>`;
   }
-  function snowScene(random = Math.random) {
-    const snowmen = planSnowmen(random).map(snowman).join("");
-    const pines = PINES.map(([x, y, scale]) => pine(x, y, scale)).join("");
+  function svg(defs, body) {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${String(WIDTH)}" height="${String(HEIGHT)}" viewBox="0 0 ${String(WIDTH)} ${String(HEIGHT)}">
 <defs>
-<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb0e8"/><stop offset=".55" stop-color="#a9d6f3"/><stop offset=".85" stop-color="#e3f2fb"/></linearGradient>
+<radialGradient id="ball" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef4fa"/><stop offset="1" stop-color="#c2d4e6"/></radialGradient>
+${defs}
+</defs>
+${body}
+</svg>`;
+  }
+  function snowScene(random = Math.random) {
+    const snowmen = planSnowmen(random);
+    const behind = snowmen.filter(({ front }) => !front).map(snowman).join("");
+    const before = snowmen.filter(({ front }) => front).map(snowman).join("");
+    const pines = PINES.map(([x, y, scale]) => pine(x, y, scale)).join("");
+    const background = svg(
+      `<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fb0e8"/><stop offset=".55" stop-color="#a9d6f3"/><stop offset=".85" stop-color="#e3f2fb"/></linearGradient>
 <linearGradient id="far" x1="0" y1="0" x2="0" y2="1"><stop offset=".3" stop-color="#9db7d1"/><stop offset="1" stop-color="#d4e4f1"/></linearGradient>
 <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#6f8fb0"/><stop offset="1" stop-color="#a9c1d8"/></linearGradient>
 <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfdff"/><stop offset="1" stop-color="#dbe8f3"/></linearGradient>
 <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#e8f1f8"/><stop offset="1" stop-color="#c3d7e8"/></linearGradient>
-<radialGradient id="ball" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#eef4fa"/><stop offset="1" stop-color="#c2d4e6"/></radialGradient>
 <clipPath id="farClip"><path d="${FAR_RANGE}"/></clipPath>
-<clipPath id="midClip"><path d="${MID_RANGE}"/></clipPath>
-</defs>
-<rect width="${String(WIDTH)}" height="${String(HEIGHT)}" fill="url(#sky)"/>
+<clipPath id="midClip"><path d="${MID_RANGE}"/></clipPath>`,
+      `<rect width="${String(WIDTH)}" height="${String(HEIGHT)}" fill="url(#sky)"/>
 <path d="${FAR_RANGE}" fill="url(#far)"/>
 <path d="${FAR_SNOWLINE}" fill="#f7fbfe" clip-path="url(#farClip)"/>
 <path d="${MID_RANGE}" fill="url(#mid)"/>
@@ -346,11 +357,12 @@ ${hatShape}
 ${pines}
 <path d="${GROUND}" fill="url(#ground)"/>
 <path d="M0 ${String(GROUND_Y + 2)} H${String(WIDTH)}" stroke="#ffffff" stroke-width="3" opacity=".8"/>
-${snowmen}
-</svg>`;
+${behind}`
+    );
+    return { background, foreground: svg("", before) };
   }
 
-  // main/src/ts/levels/mock.ts
+  // main/src/ts/levels/snowman/level.ts
   var SNOW_LEVEL = {
     number: 2,
     title: "Snowman",
@@ -358,6 +370,7 @@ ${snowmen}
     texts: ABANDONED_AREA.texts,
     enemy: DOG,
     birds: false,
+    textColor: "#000",
     snowfall: { flakes: 160 }
   };
 
@@ -651,15 +664,15 @@ ${snowmen}
       bird.style.width = `${flight.sizePx}px`;
       bird.style.animationDuration = `${flight.durationMs}ms`;
       bird.style.animationDelay = `${flight.delayMs}ms`;
-      const svg = svgElement("svg", { viewBox: "0 0 40 18" });
-      svg.style.setProperty("--flap", `${flight.flapMs}ms`);
+      const svg2 = svgElement("svg", { viewBox: "0 0 40 18" });
+      svg2.style.setProperty("--flap", `${flight.flapMs}ms`);
       const songbird = svgElement("g", { class: "bird-shape" });
       songbird.append(
         svgElement("path", { d: BIRD_BODY_PATH }),
         svgElement("path", { class: "bird-wing", d: BIRD_WING_PATH })
       );
-      svg.append(songbird, svgElement("path", { class: "bat-shape", d: BAT_PATH }));
-      bird.append(svg);
+      svg2.append(songbird, svgElement("path", { class: "bat-shape", d: BAT_PATH }));
+      bird.append(svg2);
       return bird;
     }
   };
@@ -685,6 +698,7 @@ ${snowmen}
           enemySprites: level.enemy.spriteFolder,
           background: level.background,
           birds: level.birds,
+          textColor: level.textColor,
           weather: level.weather,
           snowfall: level.snowfall
         });
@@ -913,6 +927,7 @@ ${snowmen}
     showRound(round, look) {
       this.look = look;
       this.setBackground(look.background);
+      byId("textField").style.color = look.textColor ?? "";
       const input = byId("primerText", HTMLInputElement);
       input.value = "";
       input.maxLength = round.length;
@@ -968,8 +983,15 @@ ${snowmen}
       sprite.style.left = `${actor.position}px`;
     }
     setBackground(background) {
-      const url = typeof background === "string" ? imageUrl(background) : svgUrl(background());
-      document.body.style.backgroundImage = `url("${url}")`;
+      const foreground = byId("foreground");
+      if (typeof background === "string") {
+        document.body.style.backgroundImage = `url("${imageUrl(background)}")`;
+        foreground.style.backgroundImage = "none";
+        return;
+      }
+      const scenery = background();
+      document.body.style.backgroundImage = `url("${svgUrl(scenery.background)}")`;
+      foreground.style.backgroundImage = `url("${svgUrl(scenery.foreground)}")`;
     }
     setStageVisible(visible) {
       const display = visible ? "block" : "none";
@@ -1327,7 +1349,7 @@ ${snowmen}
     update();
   }
 
-  // main/src/ts/levels/storm.ts
+  // main/src/ts/levels/adandoned/storm.ts
   function pick(random, { min, max }) {
     return Math.round(min + random() * (max - min));
   }

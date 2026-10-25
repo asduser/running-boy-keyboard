@@ -6,6 +6,7 @@ describe("planSnowmen", () => {
 
     expect(snowmen).toHaveLength(4);
     expect(snowmen.map(({ x }) => x)).toEqual([300, 100, 600, 1100]);
+    expect(snowmen.map(({ front }) => front)).toEqual([false, true, true, true]);
   });
 
   it("keeps every snowman inside the scene and on the snow", () => {
@@ -17,16 +18,16 @@ describe("planSnowmen", () => {
       expect(x).toBeGreaterThanOrEqual(0);
       expect(x).toBeLessThanOrEqual(1500);
       expect(baseY).toBeGreaterThanOrEqual(664);
-      expect(baseY).toBeLessThanOrEqual(704);
+      expect(baseY).toBeLessThanOrEqual(726);
     });
   });
 });
 
 describe("snowScene", () => {
-  it("draws one snowman group per plan", () => {
-    const scene = snowScene(() => 0);
+  it("draws the snowmen standing before the runners on the foreground", () => {
+    const { background, foreground } = snowScene(() => 0);
 
-    expect(scene.startsWith("<svg")).toBe(true);
-    expect(scene.match(/fill="url\(#ball\)"/g)).toHaveLength(4 * 3);
+    expect(background.match(/fill="url\(#ball\)"/g)).toHaveLength(1 * 3);
+    expect(foreground.match(/fill="url\(#ball\)"/g)).toHaveLength(3 * 3);
   });
 });

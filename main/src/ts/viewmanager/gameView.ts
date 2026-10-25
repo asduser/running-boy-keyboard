@@ -11,6 +11,7 @@ export interface RoundLook {
   readonly enemySprites: string;
   readonly background: Background;
   readonly birds: boolean;
+  readonly textColor?: string;
   readonly weather?: Weather;
   readonly snowfall?: Snowfall;
 }
@@ -27,6 +28,7 @@ export class GameView {
   showRound(round: RoundSnapshot, look: RoundLook): void {
     this.look = look;
     this.setBackground(look.background);
+    byId("textField").style.color = look.textColor ?? "";
     const input = byId("primerText", HTMLInputElement);
     input.value = "";
     input.maxLength = round.length;
@@ -93,8 +95,15 @@ export class GameView {
   }
 
   private setBackground(background: Background): void {
-    const url = typeof background === "string" ? imageUrl(background) : svgUrl(background());
-    document.body.style.backgroundImage = `url("${url}")`;
+    const foreground = byId("foreground");
+    if (typeof background === "string") {
+      document.body.style.backgroundImage = `url("${imageUrl(background)}")`;
+      foreground.style.backgroundImage = "none";
+      return;
+    }
+    const scenery = background();
+    document.body.style.backgroundImage = `url("${svgUrl(scenery.background)}")`;
+    foreground.style.backgroundImage = `url("${svgUrl(scenery.foreground)}")`;
   }
 
   private setStageVisible(visible: boolean): void {

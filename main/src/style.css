@@ -1111,6 +1111,18 @@ body:has(#weather.storm) #birds .bird .bat-shape {
 #gameOver_statBtn:hover {
   cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
+#foreground {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: no-repeat;
+  background-size: inherit;
+  background-position: inherit;
+}
 #weather {
   --sun: clamp(28px, 5.5vmin, 60px);
   position: fixed;

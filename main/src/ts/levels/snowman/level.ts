@@ -10,5 +10,6 @@ export const SNOW_LEVEL: Level = {
   texts: ABANDONED_AREA.texts,
   enemy: DOG,
   birds: false,
+  textColor: "#000",
   snowfall: { flakes: 160 },
 };
