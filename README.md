@@ -1,6 +1,6 @@
 ## Demo
 
-<a href="https://github.com/asduser/running-boy-keyboard/blob/master/main/src/index.html" target="_blank"><b>Open demo page.</b></a> 
+<a href="http://asduser.github.io/examples/running-boy-keyboard/main/index.html" target="_blank"><b>Open demo page.</b></a> 
 
 ## Description
 
