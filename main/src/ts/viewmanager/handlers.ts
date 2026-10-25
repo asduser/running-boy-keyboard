@@ -4,6 +4,9 @@ import { byId } from "./dom";
 
 export interface UiActions {
   start(): void;
+  chooseLevel(): void;
+  mockLevel(): void;
+  menuBack(): void;
   startLevel(): void;
   openVolume(): void;
   openSettings(): void;
@@ -31,6 +34,15 @@ export function bindHandlers(actions: UiActions): void {
   const clickActions: Record<string, () => void> = {
     start: () => {
       actions.start();
+    },
+    "choose-level": () => {
+      actions.chooseLevel();
+    },
+    "mock-level": () => {
+      actions.mockLevel();
+    },
+    "menu-back": () => {
+      actions.menuBack();
     },
     "start-level": () => {
       actions.startLevel();

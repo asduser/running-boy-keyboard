@@ -28,7 +28,7 @@ function main(): void {
     game: new Game(),
     stats: new SessionStats(),
     settings: new Settings(),
-    mainMenu: new MainMenu(FIRST_LEVEL),
+    mainMenu: new MainMenu(),
     level: FIRST_LEVEL,
     audio,
     screens,

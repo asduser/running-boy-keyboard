@@ -210,6 +210,15 @@ body {
   background: linear-gradient(to top, #99a8e0, #52a8e0);
   margin: 20px 0 0;
 }
+#boyMenu[data-step="main"] li[data-step="levels"],
+#boyMenu[data-step="levels"] li[data-step="main"],
+#boyMenu[data-step="main"] + .help_back {
+  display: none;
+}
+#boyMenu + .help_back {
+  display: block;
+  margin: 20px auto 0;
+}
 #parent_level1Popup,
 #parent_miscGame,
 #parent_option {

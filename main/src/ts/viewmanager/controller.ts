@@ -59,9 +59,8 @@ export class GameController implements UiActions {
   }
 
   init(): void {
-    const { screens, menuView, gameView, mainMenu, audio } = this.deps;
+    const { screens, gameView, audio } = this.deps;
     this.applySettings(this.settings);
-    menuView.renderStartLabel(mainMenu.startLabel);
     gameView.showMenuBackground();
     screens.show("mainMenu");
     if (this.settings.menuMusic) {
@@ -70,12 +69,30 @@ export class GameController implements UiActions {
   }
 
   start(): void {
+    this.click();
+    this.deps.menuView.showMenuStep("levels");
+    this.deps.screens.show("mainMenu");
+  }
+
+  chooseLevel(): void {
+    this.deps.menuView.showMenuStep("main");
     if (this.deps.mainMenu.showsLevelIntro) {
       this.switchPopup("mainMenu", "levelIntro");
     } else {
       this.click();
       this.beginRound();
     }
+  }
+
+  mockLevel(): void {
+    this.click();
+    alert("mocked level");
+  }
+
+  menuBack(): void {
+    this.click();
+    this.deps.menuView.showMenuStep("main");
+    this.deps.screens.show("mainMenu");
   }
 
   startLevel(): void {
@@ -205,10 +222,9 @@ export class GameController implements UiActions {
   }
 
   private onRoundEnded(result: RoundResult): void {
-    const { stats, mainMenu, menuView, gameView, audio, screens } = this.deps;
+    const { stats, mainMenu, gameView, audio, screens } = this.deps;
     stats.record(result);
     mainMenu.markPlayed();
-    menuView.renderStartLabel(mainMenu.startLabel);
     gameView.hide();
     audio.pauseMusic("game");
     if (result.outcome === "won") {

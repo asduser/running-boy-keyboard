@@ -35,8 +35,8 @@ export class MenuView {
     this.renderToggle("VolumeDogOn", "VolumeDogOff", settings.enemySounds);
   }
 
-  renderStartLabel(label: string): void {
-    byId("startBtn").textContent = label;
+  showMenuStep(step: "main" | "levels"): void {
+    byId("boyMenu").dataset.step = step;
   }
 
   renderStats(stats: StatsSummary): void {

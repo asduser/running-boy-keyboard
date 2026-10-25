@@ -61,20 +61,27 @@
         <h1>Main menu</h1>
         <hr class="hr2" />
         <div id="boyMenuDiv">
-          <ul id="boyMenu">
-            <li id="startBtn" data-action="start" data-hover-sound>
+          <ul id="boyMenu" data-step="main">
+            <li id="startBtn" data-step="main" data-action="start" data-hover-sound>
               Start
             </li>
-            <li data-action="open-volume" data-hover-sound>
+            <li data-step="main" data-action="open-volume" data-hover-sound>
               Volume
             </li>
-            <li data-action="open-settings" data-hover-sound>
+            <li data-step="main" data-action="open-settings" data-hover-sound>
               Settings
             </li>
-            <li data-action="open-help" data-hover-sound>
+            <li data-step="main" data-action="open-help" data-hover-sound>
               Help
             </li>
+            <li data-step="levels" data-action="choose-level" data-hover-sound>
+              Abandoned area
+            </li>
+            <li data-step="levels" data-action="mock-level" data-hover-sound>
+              Mock
+            </li>
           </ul>
+          <input type="button" class="help_back" value="Back" data-action="menu-back" />
         </div>
         <div class="popup_artefact"></div>
         <div class="popup_artefact"></div>

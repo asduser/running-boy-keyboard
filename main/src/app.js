@@ -379,15 +379,11 @@
 
   // main/src/ts/menu/mainMenu.ts
   var MainMenu = class {
-    constructor(level) {
-      __publicField(this, "level", level);
+    constructor() {
       __publicField(this, "played", false);
     }
     get showsLevelIntro() {
       return !this.played;
-    }
-    get startLabel() {
-      return this.played ? `"${this.level.title}"` : "Start";
     }
     markPlayed() {
       this.played = true;
@@ -611,9 +607,8 @@
       });
     }
     init() {
-      const { screens, menuView, gameView, mainMenu, audio } = this.deps;
+      const { screens, gameView, audio } = this.deps;
       this.applySettings(this.settings);
-      menuView.renderStartLabel(mainMenu.startLabel);
       gameView.showMenuBackground();
       screens.show("mainMenu");
       if (this.settings.menuMusic) {
@@ -621,12 +616,27 @@
       }
     }
     start() {
+      this.click();
+      this.deps.menuView.showMenuStep("levels");
+      this.deps.screens.show("mainMenu");
+    }
+    chooseLevel() {
+      this.deps.menuView.showMenuStep("main");
       if (this.deps.mainMenu.showsLevelIntro) {
         this.switchPopup("mainMenu", "levelIntro");
       } else {
         this.click();
         this.beginRound();
       }
+    }
+    mockLevel() {
+      this.click();
+      alert("mocked level");
+    }
+    menuBack() {
+      this.click();
+      this.deps.menuView.showMenuStep("main");
+      this.deps.screens.show("mainMenu");
     }
     startLevel() {
       this.click();
@@ -731,10 +741,9 @@
       this.deps.screens.show(destination);
     }
     onRoundEnded(result) {
-      const { stats, mainMenu, menuView, gameView, audio, screens } = this.deps;
+      const { stats, mainMenu, gameView, audio, screens } = this.deps;
       stats.record(result);
       mainMenu.markPlayed();
-      menuView.renderStartLabel(mainMenu.startLabel);
       gameView.hide();
       audio.pauseMusic("game");
       if (result.outcome === "won") {
@@ -868,6 +877,15 @@
     const clickActions = {
       start: () => {
         actions.start();
+      },
+      "choose-level": () => {
+        actions.chooseLevel();
+      },
+      "mock-level": () => {
+        actions.mockLevel();
+      },
+      "menu-back": () => {
+        actions.menuBack();
       },
       "start-level": () => {
         actions.startLevel();
@@ -1066,8 +1084,8 @@
       this.renderToggle("VolumeBtOn", "VolumeBtOff", settings.menuSounds);
       this.renderToggle("VolumeDogOn", "VolumeDogOff", settings.enemySounds);
     }
-    renderStartLabel(label) {
-      byId("startBtn").textContent = label;
+    showMenuStep(step) {
+      byId("boyMenu").dataset.step = step;
     }
     renderStats(stats) {
       const values = {
@@ -1128,7 +1146,7 @@
     }
   };
 
-  // main/src/ts/viewmanager/scrollbars.ts
+  // main/src/ts/viewmanager/scrollbar/scrollbars.ts
   var MIN_THUMB = 24;
   function attachScrollbar(id) {
     const view = byId(id);
@@ -1139,7 +1157,7 @@
     track.append(thumb);
     view.classList.add("custom-scroll");
     view.after(track);
-    const metrics = () => {
+    const getMetrics = () => {
       const thumbHeight = Math.max(MIN_THUMB, view.clientHeight / view.scrollHeight * view.clientHeight);
       return {
         thumbHeight,
@@ -1148,7 +1166,7 @@
       };
     };
     const update = () => {
-      const { thumbHeight, travel, range } = metrics();
+      const { thumbHeight, travel, range } = getMetrics();
       track.hidden = range <= 0;
       track.style.top = `${view.offsetTop}px`;
       track.style.left = `${view.offsetLeft + view.offsetWidth}px`;
@@ -1163,7 +1181,7 @@
       const startY = event.clientY;
       const startTop = view.scrollTop;
       const move = (moveEvent) => {
-        const { travel, range } = metrics();
+        const { travel, range } = getMetrics();
         view.scrollTop = startTop + (moveEvent.clientY - startY) * range / travel;
       };
       const end = () => {
@@ -1180,7 +1198,7 @@
       if (event.target !== track) {
         return;
       }
-      const { thumbHeight, travel, range } = metrics();
+      const { thumbHeight, travel, range } = getMetrics();
       const offset = event.clientY - track.getBoundingClientRect().top - thumbHeight / 2;
       view.scrollTo({ top: Math.min(Math.max(offset, 0), travel) / travel * range, behavior: "smooth" });
     });
@@ -1307,7 +1325,7 @@
       game: new Game(),
       stats: new SessionStats(),
       settings: new Settings(),
-      mainMenu: new MainMenu(FIRST_LEVEL),
+      mainMenu: new MainMenu(),
       level: FIRST_LEVEL,
       audio,
       screens,
