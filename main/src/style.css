@@ -426,6 +426,24 @@ body {
   height: 370px;
   overflow-y: scroll;
 }
+#help_info::-webkit-scrollbar {
+  width: 8px;
+}
+#help_info::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-radius: 4px;
+}
+#help_info::-webkit-scrollbar-thumb,
+#help_info::-webkit-scrollbar-thumb:hover,
+#help_info::-webkit-scrollbar-thumb:active {
+  background: #080;
+  border-radius: 4px;
+}
+@supports not selector(::-webkit-scrollbar) {
+  #help_info {
+    scrollbar-color: #080 #e6e6e6;
+  }
+}
 #help_info b {
   font: 700 13px Tahoma;
   color: #ff4500;
