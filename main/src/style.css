@@ -70,7 +70,7 @@ body {
   clear: both;
 }
 .hr2 {
-  margin: 18px auto auto 68px;
+  margin: 18px auto auto;
 }
 .hr3 {
   margin: 18px 0 0 115px;
@@ -238,7 +238,7 @@ body {
   position: fixed;
 }
 #miscGame {
-  background: #85c3f1;
+  background: #fff;
   width: 350px;
   margin: 5% auto;
   border: 10px solid #ddd;
@@ -250,16 +250,19 @@ body {
 }
 #miscGame h1 {
   font-family: Georgia;
-  margin: 18px 0 0 32px;
+  margin: 18px 0 0;
+  text-align: center;
   color: #333;
 }
 #miscGame_info {
   font: italic 14px Georgia;
-  color: #333;
+  color: #777;
   margin: 17px 4px 0 7px;
   height: 370px;
+  overflow-y: auto;
 }
 #miscGame_info b {
+  font: 700 13px Tahoma;
   color: #ff4500;
 }
 .miscGame_GMvalue,
@@ -268,16 +271,16 @@ body {
   float: left;
   width: 200px;
   margin: 15px 0 10px 10px;
-  font: 15px Verdana;
+  font: 14px Verdana;
 }
 .miscGame_Values {
   width: 62px;
   text-align: right;
-  color: #fff;
+  color: #aaa;
 }
 .miscGame_GMvalue {
   width: 110px;
-  color: #fff;
+  color: #aaa;
 }
 #mybtnBg {
   width: 30px;
@@ -297,8 +300,8 @@ body {
 #VolumeDogOff,
 #VolumeDogOn {
   float: left;
-  color: #fff;
-  font: 15px Verdana;
+  color: #aaa;
+  font: 14px Verdana;
   margin-top: 15px;
 }
 #VolumeBtOff,
@@ -322,7 +325,7 @@ body {
   position: fixed;
 }
 #option {
-  background: #85c3f1;
+  background: #fff;
   width: 350px;
   margin: 5% auto;
   border: 10px solid #ddd;
@@ -339,17 +342,19 @@ body {
 }
 #option h1 {
   font-family: Georgia;
-  margin: 18px 0 0 90px;
+  margin: 18px 0 0;
+  text-align: center;
   color: #333;
 }
 #option_info {
   font: italic 14px Georgia;
-  color: #333;
+  color: #777;
   margin: 17px 4px 0 7px;
   height: 370px;
   overflow-y: scroll;
 }
 #option_info b {
+  font: 700 13px Tahoma;
   color: #ff4500;
 }
 #option_info select[name="gameDiff"] {
@@ -362,11 +367,11 @@ body {
   float: left;
   width: 210px;
   margin: 15px 0 0 10px;
-  font: 18px Verdana;
+  font: 14px Verdana;
 }
 .option_diffValues {
   width: 80px;
-  color: #fff;
+  color: #aaa;
   text-align: right;
 }
 #heroChoise input[type="radio"]:hover {
@@ -426,21 +431,33 @@ body {
   height: 370px;
   overflow-y: scroll;
 }
-#help_info::-webkit-scrollbar {
+#help_info::-webkit-scrollbar,
+#miscGame_info::-webkit-scrollbar,
+#option_info::-webkit-scrollbar {
   width: 8px;
 }
-#help_info::-webkit-scrollbar-track {
+#help_info::-webkit-scrollbar-track,
+#miscGame_info::-webkit-scrollbar-track,
+#option_info::-webkit-scrollbar-track {
   background: #e6e6e6;
   border-radius: 4px;
 }
 #help_info::-webkit-scrollbar-thumb,
 #help_info::-webkit-scrollbar-thumb:hover,
-#help_info::-webkit-scrollbar-thumb:active {
+#help_info::-webkit-scrollbar-thumb:active,
+#miscGame_info::-webkit-scrollbar-thumb,
+#miscGame_info::-webkit-scrollbar-thumb:hover,
+#miscGame_info::-webkit-scrollbar-thumb:active,
+#option_info::-webkit-scrollbar-thumb,
+#option_info::-webkit-scrollbar-thumb:hover,
+#option_info::-webkit-scrollbar-thumb:active {
   background: #080;
   border-radius: 4px;
 }
 @supports not selector(::-webkit-scrollbar) {
-  #help_info {
+  #help_info,
+  #miscGame_info,
+  #option_info {
     scrollbar-color: #080 #e6e6e6;
   }
 }
@@ -885,7 +902,7 @@ body {
 }
 #musicInGameOn,
 #musicInGameOff {
-  color: #fff;
+  color: #aaa;
 }
 #VolumeBtOn.selected,
 #VolumeBtOff.selected,

@@ -1,3 +1,10 @@
+// const MODEL_ID = {
+//   MODEL_1: "model1",
+//   MODEL_2: "model2",
+//   MODEL_3: "model3",
+//   MODEL_: "model4",
+// };
+
 export type HeroId = "model1" | "model2" | "model3" | "model4";
 
 export interface Hero {
