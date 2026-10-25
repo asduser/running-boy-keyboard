@@ -308,6 +308,12 @@ body {
 #VolumeDogOff {
   margin-left: 8px;
 }
+[data-action],
+button,
+label,
+select,
+input[type="radio"],
+input[type="range"],
 #VolumeBtOff,
 #VolumeBtOn,
 #VolumeDogOff,
@@ -375,7 +381,7 @@ body {
   text-align: right;
 }
 #heroChoise input[type="radio"]:hover {
-  cursor: pointer;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 .heroValueDiv {
   float: left;
@@ -431,35 +437,28 @@ body {
   height: 370px;
   overflow-y: scroll;
 }
-#help_info::-webkit-scrollbar,
-#miscGame_info::-webkit-scrollbar,
-#option_info::-webkit-scrollbar {
-  width: 8px;
+.custom-scroll {
+  box-sizing: border-box;
+  padding-right: 8px;
+  scrollbar-width: none;
 }
-#help_info::-webkit-scrollbar-track,
-#miscGame_info::-webkit-scrollbar-track,
-#option_info::-webkit-scrollbar-track {
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+.scroll-track {
+  position: absolute;
+  width: 8px;
+  margin-left: -8px;
   background: #e6e6e6;
   border-radius: 4px;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
-#help_info::-webkit-scrollbar-thumb,
-#help_info::-webkit-scrollbar-thumb:hover,
-#help_info::-webkit-scrollbar-thumb:active,
-#miscGame_info::-webkit-scrollbar-thumb,
-#miscGame_info::-webkit-scrollbar-thumb:hover,
-#miscGame_info::-webkit-scrollbar-thumb:active,
-#option_info::-webkit-scrollbar-thumb,
-#option_info::-webkit-scrollbar-thumb:hover,
-#option_info::-webkit-scrollbar-thumb:active {
+.scroll-thumb {
+  width: 100%;
   background: #080;
   border-radius: 4px;
-}
-@supports not selector(::-webkit-scrollbar) {
-  #help_info,
-  #miscGame_info,
-  #option_info {
-    scrollbar-color: #080 #e6e6e6;
-  }
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
+  touch-action: none;
 }
 #help_info b {
   font: 700 13px Tahoma;
@@ -873,15 +872,13 @@ body {
   padding: 8px 18px;
   font: 700 17px Georgia;
   border: none;
-  cursor: pointer;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 #soundUnlock_btn:hover {
   background: #080;
 }
 #boyMenu li:hover {
-  cursor:
-    url(../../assets/icons/cursorBoyGreen.png) 0 0,
-    pointer;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 #progressBar {
   background-color: #fff;
@@ -933,9 +930,7 @@ body {
   transition:
     background-color 0.3s,
     border-color 0.3s;
-  cursor:
-    url(../../assets/icons/cursorBoyGreen.png) 0 0,
-    pointer;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 #option_info select[name="gameDiff"]:hover,
 #option_info select[name="gameDiff"]:focus {
@@ -965,10 +960,45 @@ body {
   color: #2f6184;
   font: 700 16px Georgia;
 }
+@supports (appearance: base-select) {
+  #option_info select[name="gameDiff"],
+  #option_info select[name="gameDiff"]::picker(select) {
+    appearance: base-select;
+  }
+  #option_info select[name="gameDiff"] {
+    display: flex;
+    align-items: center;
+  }
+  #option_info select[name="gameDiff"]::picker-icon {
+    display: none;
+  }
+  #option_info select[name="gameDiff"]::picker(select) {
+    margin-top: 4px;
+    padding: 4px;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  #option_info select[name="gameDiff"] option {
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: url(../../assets/icons/cursorBoyHover.png), auto;
+  }
+  #option_info select[name="gameDiff"] option::checkmark {
+    display: none;
+  }
+  #option_info select[name="gameDiff"] option:hover,
+  #option_info select[name="gameDiff"] option:focus-visible {
+    background: #eee;
+    outline: none;
+  }
+  #option_info select[name="gameDiff"] option:checked {
+    background: #e6f3e6;
+  }
+}
 .help_back:hover {
-  cursor:
-    url(../../assets/icons/cursorBoyGreen.png) 0 0,
-    pointer;
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 #birds {
   position: fixed;
@@ -1066,10 +1096,11 @@ body:has(#weather.storm) #birds .bird .bat-shape {
   background: #900;
 }
 #level1Popup_startBtn:hover,
-#level1Popup_cancelBtn:hover {
-  cursor:
-    url(../../assets/icons/cursorBoyGreen.png) 0 0,
-    pointer;
+#level1Popup_cancelBtn:hover,
+#gameOver_againBtn:hover,
+#gameOver_menuBtn:hover,
+#gameOver_statBtn:hover {
+  cursor: url(../../assets/icons/cursorBoyHover.png), auto;
 }
 #weather {
   --sun: clamp(28px, 5.5vmin, 60px);

@@ -12,6 +12,7 @@ import { bindHandlers } from "./viewmanager/handlers";
 import { Layout } from "./viewmanager/layout";
 import { MenuView } from "./viewmanager/menuView";
 import { Screens } from "./viewmanager/screens";
+import { attachScrollbar } from "./viewmanager/scrollbar";
 import { WeatherView } from "./viewmanager/weatherView";
 
 function main(): void {
@@ -38,6 +39,7 @@ function main(): void {
   watchPageActivity((active) => {
     audio.setSuspended(!active);
   });
+  ["help_info", "miscGame_info", "option_info"].forEach(attachScrollbar);
   layout.init();
   controller.init();
 }
