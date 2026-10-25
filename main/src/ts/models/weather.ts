@@ -3,6 +3,10 @@ export interface Range {
   readonly max: number;
 }
 
+export interface Snowfall {
+  readonly flakes: number;
+}
+
 export interface Weather {
   readonly calmMs: Range;
   readonly stormMs: Range;

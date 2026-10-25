@@ -1,6 +1,6 @@
 import { Game } from "./core/game";
 import { SessionStats } from "./core/sessionStats";
-import { FIRST_LEVEL } from "./levels";
+import { FIRST_LEVEL, SNOW_LEVEL } from "./levels";
 import { AudioManager } from "./media/audioManager";
 import { watchPageActivity } from "./media/pageActivity";
 import { MainMenu } from "./menu/mainMenu";
@@ -30,6 +30,7 @@ function main(): void {
     settings: new Settings(),
     mainMenu: new MainMenu(),
     level: FIRST_LEVEL,
+    mockLevel: SNOW_LEVEL,
     audio,
     screens,
     gameView: new GameView(new Birds(), new WeatherView()),

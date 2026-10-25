@@ -1,5 +1,5 @@
-import { DOG } from "../models/enemy";
-import type { Level } from "../models/level";
+import { DOG } from "../../models/enemy";
+import type { Level } from "../../models/level";
 
 export const ABANDONED_AREA: Level = {
   number: 1,
@@ -14,6 +14,7 @@ export const ABANDONED_AREA: Level = {
     "mcrsft ppl ggl andrd s wndws phn lg smsng",
   ],
   enemy: DOG,
+  birds: true,
   weather: {
     calmMs: { min: 2_000, max: 8_000 },
     stormMs: { min: 10_000, max: 25_000 },

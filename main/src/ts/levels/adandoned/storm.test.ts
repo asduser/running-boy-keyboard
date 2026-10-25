@@ -1,4 +1,4 @@
-import type { Weather } from "../models/weather";
+import type { Weather } from "../../models/weather";
 import { ABANDONED_AREA } from "./abandonedArea";
 import { planStorm } from "./storm";
 

@@ -1,6 +1,7 @@
+import type { Background } from "../models/level";
 import type { Actor, RoundSnapshot } from "../models/round";
-import type { Weather } from "../models/weather";
-import { MENU_BACKGROUND, imageUrl, spriteUrl } from "./assets";
+import type { Snowfall, Weather } from "../models/weather";
+import { MENU_BACKGROUND, imageUrl, spriteUrl, svgUrl } from "./assets";
 import type { Birds } from "./birds";
 import { byId } from "./dom";
 import type { WeatherView } from "./weatherView";
@@ -8,8 +9,10 @@ import type { WeatherView } from "./weatherView";
 export interface RoundLook {
   readonly heroSprites: string;
   readonly enemySprites: string;
-  readonly background: string;
+  readonly background: Background;
+  readonly birds: boolean;
   readonly weather?: Weather;
+  readonly snowfall?: Snowfall;
 }
 
 export class GameView {
@@ -32,7 +35,7 @@ export class GameView {
     this.moveHero(round.hero);
     this.moveEnemy(round.enemy);
     this.setStageVisible(true);
-    this.weather.start(look.weather);
+    this.weather.start(look.weather, look.snowfall);
     input.focus({ preventScroll: true });
   }
 
@@ -89,8 +92,9 @@ export class GameView {
     sprite.style.left = `${actor.position}px`;
   }
 
-  private setBackground(file: string): void {
-    document.body.style.backgroundImage = `url('${imageUrl(file)}')`;
+  private setBackground(background: Background): void {
+    const url = typeof background === "string" ? imageUrl(background) : svgUrl(background());
+    document.body.style.backgroundImage = `url("${url}")`;
   }
 
   private setStageVisible(visible: boolean): void {
@@ -98,10 +102,12 @@ export class GameView {
     byId("wrapper_div").style.display = display;
     byId("GameScoreDiv").style.display = display;
     byId("generalMenuDiv").style.display = display;
-    if (visible) {
+    if (visible && this.look?.birds) {
       this.birds.start();
     } else {
       this.birds.stop();
+    }
+    if (!visible) {
       this.weather.stop();
       byId("primerText").blur();
     }

@@ -9,3 +9,7 @@ export function spriteUrl(folder: string, frame: number): string {
 export function imageUrl(file: string): string {
   return `${ASSETS_PATH}images/${file}`;
 }
+
+export function svgUrl(markup: string): string {
+  return `data:image/svg+xml,${encodeURIComponent(markup)}`;
+}

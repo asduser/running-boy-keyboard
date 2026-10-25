@@ -15,7 +15,7 @@ const ENEMY: Enemy = {
 };
 
 function level(texts: readonly string[], enemy: Enemy = ENEMY): Level {
-  return { number: 1, title: "Test", background: "bg.jpg", texts, enemy };
+  return { number: 1, title: "Test", background: "bg.jpg", texts, enemy, birds: false };
 }
 
 interface Setup {

@@ -18,6 +18,7 @@ export interface ControllerDeps {
   readonly settings: Settings;
   readonly mainMenu: MainMenu;
   readonly level: Level;
+  readonly mockLevel: Level;
   readonly audio: AudioManager;
   readonly screens: Screens;
   readonly gameView: GameView;
@@ -25,15 +26,20 @@ export interface ControllerDeps {
 }
 
 export class GameController implements UiActions {
+  private level: Level;
+
   constructor(private readonly deps: ControllerDeps) {
     const { game, settings } = deps;
+    this.level = deps.level;
     game.on("roundStarted", (round) => {
-      const { level } = this.deps;
+      const { level } = this;
       deps.gameView.showRound(round, {
         heroSprites: HEROES[this.settings.hero].spriteFolder,
         enemySprites: level.enemy.spriteFolder,
         background: level.background,
+        birds: level.birds,
         weather: level.weather,
+        snowfall: level.snowfall,
       });
     });
     game.on("typed", ({ round }) => {
@@ -76,6 +82,7 @@ export class GameController implements UiActions {
 
   chooseLevel(): void {
     this.deps.menuView.showMenuStep("main");
+    this.level = this.deps.level;
     if (this.deps.mainMenu.showsLevelIntro) {
       this.switchPopup("mainMenu", "levelIntro");
     } else {
@@ -86,7 +93,9 @@ export class GameController implements UiActions {
 
   mockLevel(): void {
     this.click();
-    alert("mocked level");
+    this.deps.menuView.showMenuStep("main");
+    this.level = this.deps.mockLevel;
+    this.beginRound();
   }
 
   menuBack(): void {
@@ -205,7 +214,8 @@ export class GameController implements UiActions {
   }
 
   private beginRound(): void {
-    const { screens, audio, stats, game, level } = this.deps;
+    const { screens, audio, stats, game } = this.deps;
+    const { level } = this;
     screens.hideGamePopups();
     audio.pauseMusic("menu");
     if (this.settings.gameMusic) {
@@ -224,7 +234,9 @@ export class GameController implements UiActions {
   private onRoundEnded(result: RoundResult): void {
     const { stats, mainMenu, gameView, audio, screens } = this.deps;
     stats.record(result);
-    mainMenu.markPlayed();
+    if (this.level === this.deps.level) {
+      mainMenu.markPlayed();
+    }
     gameView.hide();
     audio.pauseMusic("game");
     if (result.outcome === "won") {

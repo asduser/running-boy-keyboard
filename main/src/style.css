@@ -1159,6 +1159,45 @@ body:has(#weather.storm) #birds .bird .bat-shape {
     transform: translateY(calc(140vh + 120px));
   }
 }
+#weatherSnow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+#weather.snowy #weatherSnow {
+  opacity: 1;
+}
+#weatherSnow i {
+  position: absolute;
+  top: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 40%, rgba(255, 255, 255, 0.6));
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  animation-name: snow-fall, snow-sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: normal, alternate;
+}
+@keyframes snow-fall {
+  0% {
+    translate: 0 0;
+  }
+  100% {
+    translate: var(--drift) calc(100vh + 24px);
+  }
+}
+@keyframes snow-sway {
+  0% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(10px);
+  }
+}
 #weatherFlash {
   position: absolute;
   top: 0;
