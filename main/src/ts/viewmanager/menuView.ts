@@ -1,6 +1,6 @@
 import type { SettingsState } from "../menu/settings";
-import { DIFFICULTIES } from "../models/difficulty";
-import type { StatsSummary } from "../models/stats";
+import { DIFFICULTIES } from "../models";
+import type { StatsSummary } from "../models";
 import { byId } from "./dom";
 
 export class MenuView {

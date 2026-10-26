@@ -1,5 +1,5 @@
-import { DOG } from "../../models/enemy";
-import type { Level } from "../../models/level";
+import { DOG } from "../../models";
+import type { Level } from "../../models";
 
 export const ABANDONED_AREA: Level = {
   number: 2,

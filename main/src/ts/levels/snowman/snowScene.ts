@@ -1,4 +1,4 @@
-import type { Scenery } from "../../models/level";
+import type { Scenery } from "../../models";
 
 type Random = () => number;
 

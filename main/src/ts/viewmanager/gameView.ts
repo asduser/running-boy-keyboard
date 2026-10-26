@@ -1,6 +1,6 @@
-import type { Background } from "../models/level";
-import type { Actor, RoundSnapshot } from "../models/round";
-import type { Snowfall, Weather } from "../models/weather";
+import type { Background } from "../models";
+import type { Actor, RoundSnapshot } from "../models";
+import type { Snowfall, Weather } from "../models";
 import { MENU_BACKGROUND, imageUrl, spriteUrl, svgUrl } from "./assets";
 import type { Birds } from "./birds";
 import { byId } from "./dom";

@@ -1,5 +1,5 @@
-import { isDifficultyId, type DifficultyId } from "../models/difficulty";
-import { isHeroId, type HeroId } from "../models/hero";
+import { isDifficultyId, type DifficultyId } from "../models";
+import { isHeroId, type HeroId } from "../models";
 import { byId } from "./dom";
 
 export interface UiActions {

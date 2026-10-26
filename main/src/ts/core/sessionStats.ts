@@ -1,5 +1,5 @@
-import type { RoundResult } from "../models/round";
-import type { StatsSummary } from "../models/stats";
+import type { RoundResult } from "../models";
+import type { StatsSummary } from "../models";
 
 export class SessionStats {
   private attempts = 0;

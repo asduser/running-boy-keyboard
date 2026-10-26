@@ -1,5 +1,5 @@
-import { DOG } from "../../models/enemy";
-import type { Level } from "../../models/level";
+import { DOG } from "../../models";
+import type { Level } from "../../models";
 import { ABANDONED_AREA } from "../abandoned/level";
 import { snowScene } from "./snowScene";
 

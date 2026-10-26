@@ -1,4 +1,4 @@
-import type { Range, Weather } from "../../models/weather";
+import type { Range, Weather } from "../../models";
 
 export interface StormPlan {
   readonly calmMs: number;

@@ -1,6 +1,6 @@
-import type { Difficulty } from "../models/difficulty";
-import type { Level } from "../models/level";
-import type { Actor, RoundResult, RoundSnapshot } from "../models/round";
+import type { Difficulty } from "../models";
+import type { Level } from "../models";
+import type { Actor, RoundResult, RoundSnapshot } from "../models";
 import { Emitter } from "./emitter";
 import { HERO_START_POSITION, HERO_STEP, MISTAKE_PENALTY, SPRITE_FRAMES } from "./rules";
 import { browserScheduler, type Scheduler } from "./scheduler";

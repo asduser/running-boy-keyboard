@@ -1,4 +1,4 @@
-import type { CharState } from "../models/round";
+import type { CharState } from "../models";
 
 export type TypingResult = "correct" | "mistake" | "ignored";
 

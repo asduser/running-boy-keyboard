@@ -1,4 +1,4 @@
-import type { Level } from "../models/level";
+import type { Level } from "../models";
 import { ABANDONED_AREA } from "./abandoned/level";
 import { SNOW_LEVEL } from "./snowman/level";
 

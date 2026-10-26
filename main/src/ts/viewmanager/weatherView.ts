@@ -1,5 +1,5 @@
 import { type StormPlan, planStorm } from "../levels/abandoned/storm";
-import type { Snowfall, Weather } from "../models/weather";
+import type { Snowfall, Weather } from "../models";
 import { byId } from "./dom";
 
 const FADE_MS = 2_000;

@@ -1,5 +1,5 @@
-import { DEFAULT_DIFFICULTY, type DifficultyId } from "../models/difficulty";
-import { DEFAULT_HERO, type HeroId } from "../models/hero";
+import { DEFAULT_DIFFICULTY, type DifficultyId } from "../models";
+import { DEFAULT_HERO, type HeroId } from "../models";
 
 export interface SettingsState {
   readonly difficulty: DifficultyId;

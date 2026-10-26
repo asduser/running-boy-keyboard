@@ -1,7 +1,7 @@
-import { DIFFICULTIES, type Difficulty } from "../models/difficulty";
-import type { Enemy } from "../models/enemy";
-import type { Level } from "../models/level";
-import type { RoundResult, RoundSnapshot } from "../models/round";
+import { DIFFICULTIES, type Difficulty } from "../models";
+import type { Enemy } from "../models";
+import type { Level } from "../models";
+import type { RoundResult, RoundSnapshot } from "../models";
 import { Game, type GameEvents, type RoundConfig } from "./game";
 import { HERO_START_POSITION, HERO_STEP, MISTAKE_PENALTY } from "./rules";
 import { createFakeScheduler, type FakeScheduler } from "./testing";
