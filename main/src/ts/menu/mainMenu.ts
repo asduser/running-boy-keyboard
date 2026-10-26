@@ -1,11 +1,11 @@
 export class MainMenu {
   private played = false;
 
-  get showsLevelIntro(): boolean {
+  public get showsLevelIntro(): boolean {
     return !this.played;
   }
 
-  markPlayed(): void {
+  public markPlayed(): void {
     this.played = true;
   }
 }

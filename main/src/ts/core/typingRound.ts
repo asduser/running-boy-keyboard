@@ -10,23 +10,23 @@ export class TypingRound {
     this.chars = text.split("").map((char) => ({ char, typed: false, mistyped: false }));
   }
 
-  get progress(): number {
+  public get progress(): number {
     return this.cursor;
   }
 
-  get length(): number {
+  public get length(): number {
     return this.chars.length;
   }
 
-  get finished(): boolean {
+  public get finished(): boolean {
     return this.cursor >= this.chars.length;
   }
 
-  get characters(): readonly CharState[] {
+  public get characters(): readonly CharState[] {
     return this.chars.map((state) => ({ ...state }));
   }
 
-  check(input: string): TypingResult {
+  public check(input: string): TypingResult {
     const current = this.chars[this.cursor];
     if (!current || input.length <= this.cursor) {
       return "ignored";

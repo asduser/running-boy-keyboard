@@ -51,11 +51,11 @@ export class Game extends Emitter<GameEvents> {
     this.random = options.random ?? Math.random;
   }
 
-  get isRunning(): boolean {
+  public get isRunning(): boolean {
     return this.round !== null;
   }
 
-  start(config: RoundConfig): void {
+  public start(config: RoundConfig): void {
     this.abort();
     const { texts, enemy } = config.level;
     const text = texts[Math.floor(this.random() * texts.length)];
@@ -78,7 +78,7 @@ export class Game extends Emitter<GameEvents> {
     this.emit("roundStarted", this.snapshot(this.round));
   }
 
-  type(input: string): void {
+  public type(input: string): void {
     const round = this.round;
     if (!round) {
       return;
@@ -104,7 +104,7 @@ export class Game extends Emitter<GameEvents> {
     }
   }
 
-  abort(): void {
+  public abort(): void {
     if (this.round) {
       this.finish("aborted");
     }

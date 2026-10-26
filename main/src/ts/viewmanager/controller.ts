@@ -65,7 +65,7 @@ export class GameController implements UiActions {
     });
   }
 
-  init(): void {
+  public init(): void {
     const { screens, gameView, audio } = this.deps;
     this.applySettings(this.settings);
     gameView.showMenuBackground();
@@ -75,13 +75,13 @@ export class GameController implements UiActions {
     }
   }
 
-  start(): void {
+  public start(): void {
     this.click();
     this.deps.menuView.showMenuStep("levels");
     this.deps.screens.show("mainMenu");
   }
 
-  chooseLevel(): void {
+  public chooseLevel(): void {
     this.deps.menuView.showMenuStep("main");
     this.level = this.deps.level;
     if (this.deps.mainMenu.showsLevelIntro) {
@@ -92,63 +92,63 @@ export class GameController implements UiActions {
     }
   }
 
-  mockLevel(): void {
+  public mockLevel(): void {
     this.click();
     this.deps.menuView.showMenuStep("main");
     this.level = this.deps.mockLevel;
     this.beginRound();
   }
 
-  menuBack(): void {
+  public menuBack(): void {
     this.click();
     this.deps.menuView.showMenuStep("main");
     this.deps.screens.show("mainMenu");
   }
 
-  startLevel(): void {
+  public startLevel(): void {
     this.click();
     this.beginRound();
   }
 
-  openVolume(): void {
+  public openVolume(): void {
     this.openFromMenu("volume");
   }
 
-  openSettings(): void {
+  public openSettings(): void {
     this.openFromMenu("settings");
   }
 
-  openHelp(): void {
+  public openHelp(): void {
     this.openFromMenu("help");
   }
 
-  backToMenu(): void {
+  public backToMenu(): void {
     this.deps.screens.hide("volume", "settings", "help", "levelIntro");
     this.deps.screens.show("mainMenu");
     this.click();
   }
 
-  leaveToMenu(): void {
+  public leaveToMenu(): void {
     this.leaveGame("mainMenu");
   }
 
-  leaveToHelp(): void {
+  public leaveToHelp(): void {
     this.leaveGame("help");
   }
 
-  playAgain(): void {
+  public playAgain(): void {
     this.click();
     this.beginRound();
   }
 
-  resultToMenu(): void {
+  public resultToMenu(): void {
     this.click();
     this.deps.screens.hideGamePopups();
     this.deps.screens.show("mainMenu");
     this.resumeMenuMusic();
   }
 
-  showStats(): void {
+  public showStats(): void {
     const { screens, menuView, stats } = this.deps;
     this.click();
     menuView.renderStats(stats.summary());
@@ -156,12 +156,12 @@ export class GameController implements UiActions {
     screens.show("stats");
   }
 
-  unlockSound(): void {
+  public unlockSound(): void {
     this.deps.screens.hide("soundUnlock");
     this.deps.audio.unlock();
   }
 
-  toggleMenuMusic(): void {
+  public toggleMenuMusic(): void {
     const enabled = !this.settings.menuMusic;
     this.deps.settings.update({ menuMusic: enabled });
     if (enabled) {
@@ -171,40 +171,40 @@ export class GameController implements UiActions {
     }
   }
 
-  setGameMusic(enabled: boolean): void {
+  public setGameMusic(enabled: boolean): void {
     this.deps.settings.update({ gameMusic: enabled });
   }
 
-  setMenuSounds(enabled: boolean): void {
+  public setMenuSounds(enabled: boolean): void {
     this.deps.settings.update({ menuSounds: enabled });
   }
 
-  setEnemySounds(enabled: boolean): void {
+  public setEnemySounds(enabled: boolean): void {
     this.deps.settings.update({ enemySounds: enabled });
   }
 
-  setMenuMusicVolume(volume: number): void {
+  public setMenuMusicVolume(volume: number): void {
     this.deps.settings.update({ menuMusicVolume: volume });
   }
 
-  setGameMusicVolume(volume: number): void {
+  public setGameMusicVolume(volume: number): void {
     this.deps.settings.update({ gameMusicVolume: volume });
   }
 
-  setDifficulty(difficulty: DifficultyId): void {
+  public setDifficulty(difficulty: DifficultyId): void {
     this.deps.settings.update({ difficulty });
   }
 
-  setHero(hero: HeroId): void {
+  public setHero(hero: HeroId): void {
     this.deps.settings.update({ hero });
   }
 
-  type(input: string): void {
+  public type(input: string): void {
     this.deps.game.type(input);
     this.deps.gameView.syncInput();
   }
 
-  hover(): void {
+  public hover(): void {
     if (this.settings.menuSounds) {
       this.deps.audio.playEffect("hover");
     }

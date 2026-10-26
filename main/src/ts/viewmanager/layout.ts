@@ -14,7 +14,7 @@ export class Layout {
   private lastViewportWidth = 0;
   private stageScale = 1;
 
-  init(): void {
+  public init(): void {
     const onResize = (): void => {
       this.fitStage();
       this.resizeListeners.forEach((listener) => {
@@ -32,11 +32,11 @@ export class Layout {
     onResize();
   }
 
-  onResize(listener: () => void): void {
+  public onResize(listener: () => void): void {
     this.resizeListeners.add(listener);
   }
 
-  fitPopup(overlay: HTMLElement): void {
+  public fitPopup(overlay: HTMLElement): void {
     if (overlay.style.display !== "block") {
       return;
     }

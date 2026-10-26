@@ -33,18 +33,18 @@ export class Settings {
     this.state = initial;
   }
 
-  get current(): SettingsState {
+  public get current(): SettingsState {
     return this.state;
   }
 
-  update(changes: Partial<SettingsState>): void {
+  public update(changes: Partial<SettingsState>): void {
     this.state = { ...this.state, ...changes };
     this.listeners.forEach((listener) => {
       listener(this.state);
     });
   }
 
-  subscribe(listener: SettingsListener): () => void {
+  public subscribe(listener: SettingsListener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }

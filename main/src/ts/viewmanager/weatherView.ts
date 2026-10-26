@@ -15,7 +15,7 @@ export class WeatherView {
 
   constructor(private readonly plan: (weather: Weather) => StormPlan = planStorm) {}
 
-  start(weather: Weather | undefined, snowfall?: Snowfall): void {
+  public start(weather: Weather | undefined, snowfall?: Snowfall): void {
     if (
       this.sky.classList.contains("sunny") &&
       (weather ?? null) === this.weather &&
@@ -36,7 +36,7 @@ export class WeatherView {
     this.storm(weather, this.plan(weather), true);
   }
 
-  stop(): void {
+  public stop(): void {
     this.weather = null;
     this.snowfall = null;
     this.timers.forEach((timer) => {

@@ -25,7 +25,7 @@ export class GameView {
     private readonly weather: WeatherView,
   ) {}
 
-  showRound(round: RoundSnapshot, look: RoundLook): void {
+  public showRound(round: RoundSnapshot, look: RoundLook): void {
     this.look = look;
     this.setBackground(look.background);
     byId("textField").style.color = look.textColor ?? "";
@@ -41,7 +41,7 @@ export class GameView {
     input.focus({ preventScroll: true });
   }
 
-  renderTyping(round: RoundSnapshot): void {
+  public renderTyping(round: RoundSnapshot): void {
     const text = byId("textField");
     text.replaceChildren(
       ...round.chars.map((state) => {
@@ -61,31 +61,31 @@ export class GameView {
     this.syncInput();
   }
 
-  syncInput(): void {
+  public syncInput(): void {
     const input = byId("primerText", HTMLInputElement);
     if (input.value !== this.typedText) {
       input.value = this.typedText;
     }
   }
 
-  moveHero(hero: Actor): void {
+  public moveHero(hero: Actor): void {
     if (this.look) {
       this.placeSprite(byId("spriteBoy", HTMLImageElement), this.look.heroSprites, hero);
     }
   }
 
-  moveEnemy(enemy: Actor): void {
+  public moveEnemy(enemy: Actor): void {
     if (this.look) {
       this.placeSprite(byId("spriteEnemy", HTMLImageElement), this.look.enemySprites, enemy);
     }
   }
 
-  hide(): void {
+  public hide(): void {
     this.setStageVisible(false);
     this.showMenuBackground();
   }
 
-  showMenuBackground(): void {
+  public showMenuBackground(): void {
     this.setBackground(MENU_BACKGROUND);
   }
 

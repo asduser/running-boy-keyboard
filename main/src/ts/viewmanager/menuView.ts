@@ -4,7 +4,7 @@ import type { StatsSummary } from "../models";
 import { byId } from "./dom";
 
 export class MenuView {
-  renderSettings(settings: SettingsState): void {
+  public renderSettings(settings: SettingsState): void {
     const difficulty = DIFFICULTIES[settings.difficulty];
     const difficultySelect = byId("gameDiff", HTMLSelectElement);
     difficultySelect.value = difficulty.id;
@@ -35,11 +35,11 @@ export class MenuView {
     this.renderToggle("VolumeDogOn", "VolumeDogOff", settings.enemySounds);
   }
 
-  showMenuStep(step: "main" | "levels"): void {
+  public showMenuStep(step: "main" | "levels"): void {
     byId("boyMenu").dataset.step = step;
   }
 
-  renderStats(stats: StatsSummary): void {
+  public renderStats(stats: StatsSummary): void {
     const values: Record<string, string> = {
       summaryGS: String(stats.attempts),
       winnerGS: String(stats.wins),

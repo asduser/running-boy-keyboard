@@ -15,7 +15,7 @@ export class Birds {
 
   constructor(private readonly plan: () => FlockPlan = planFlock) {}
 
-  start(): void {
+  public start(): void {
     if (this.flying) {
       return;
     }
@@ -23,7 +23,7 @@ export class Birds {
     this.flyFlock(++this.flight);
   }
 
-  stop(): void {
+  public stop(): void {
     this.flying = false;
     this.flight += 1;
     clearTimeout(this.nextFlock);

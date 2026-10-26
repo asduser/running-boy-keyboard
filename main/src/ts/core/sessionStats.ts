@@ -5,15 +5,15 @@ export class SessionStats {
   private attempts = 0;
   private readonly results: RoundResult[] = [];
 
-  startAttempt(): void {
+  public startAttempt(): void {
     this.attempts++;
   }
 
-  record(result: RoundResult): void {
+  public record(result: RoundResult): void {
     this.results.push(result);
   }
 
-  summary(): StatsSummary {
+  public summary(): StatsSummary {
     const scores = this.results.map((result) => result.score);
     const times = this.results.map((result) => result.durationSec);
     const wins = this.count("won");

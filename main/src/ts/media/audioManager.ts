@@ -19,7 +19,7 @@ export class AudioManager {
     this.effects = createAll(EFFECTS, basePath, false);
   }
 
-  playMusic(id: MusicId, fromStart = false): void {
+  public playMusic(id: MusicId, fromStart = false): void {
     const track = this.music[id];
     this.wanted.add(track);
     if (fromStart) {
@@ -32,29 +32,29 @@ export class AudioManager {
     });
   }
 
-  pauseMusic(id: MusicId): void {
+  public pauseMusic(id: MusicId): void {
     const track = this.music[id];
     this.wanted.delete(track);
     track.pause();
   }
 
-  setMusicVolume(id: MusicId, volume: number): void {
+  public setMusicVolume(id: MusicId, volume: number): void {
     this.music[id].volume = volume;
   }
 
-  playEffect(id: EffectId): void {
+  public playEffect(id: EffectId): void {
     const effect = this.effects[id];
     effect.pause();
     effect.currentTime = 0;
     effect.play().catch(() => undefined);
   }
 
-  setSuspended(suspended: boolean): void {
+  public setSuspended(suspended: boolean): void {
     this.suspended = suspended;
     this.all().forEach((sound) => (sound.muted = suspended));
   }
 
-  unlock(): void {
+  public unlock(): void {
     this.all()
       .filter((sound) => sound.paused)
       .forEach((sound) => {

@@ -26,17 +26,17 @@ export class Screens {
     });
   }
 
-  show(popup: Popup): void {
+  public show(popup: Popup): void {
     const element = this.element(popup);
     element.style.display = "block";
     this.layout.fitPopup(element);
   }
 
-  hide(...popups: Popup[]): void {
+  public hide(...popups: Popup[]): void {
     popups.forEach((popup) => (this.element(popup).style.display = "none"));
   }
 
-  hideGamePopups(): void {
+  public hideGamePopups(): void {
     this.hide(...ALL_POPUPS.filter((popup) => popup !== "soundUnlock"));
   }
 
